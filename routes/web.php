@@ -18,6 +18,7 @@ Route::get('/', 'HomeController@index')->name('home');
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::resource('user', 'UserController');
+Route::get('loadmessageroom/{page}', 'MessageController@getMessageChatRoom');
 
 Route::get('auth/social/{socialType}', 'Auth\LoginController@redirectToSocial');
 Route::get('auth/social/callback/{socialType}', 'Auth\LoginController@handleSocialCallback');
@@ -30,11 +31,7 @@ Route::get('/getUserLogin', function() {
 	return Auth::user();
 })->middleware('auth');
 
-Route::get('/messages', function() {
-    return App\Message::with('user')-> get();
-})->middleware('auth');
-
-Route::post('/messages', function() {
+Route::post('/newMessages', function() {
    $user = Auth::user();
 
   $message = new App\Message();

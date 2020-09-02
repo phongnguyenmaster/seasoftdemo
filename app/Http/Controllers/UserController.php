@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use Intervention\Image\ImageManagerStatic as Image;
 
 class UserController extends Controller
 {
@@ -84,17 +85,32 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'name'=>'required',
-            'email'=>'required',
-            'password'=>'required'
+            'name' => 'required',
+            'email' => 'required',
         ]);
 
         $user = User::find($id);
         $user->name =  $request->get('name');
         $user->email = $request->get('email');
-        $user->password = $request->get('password');
+        //$user->password = $request->get('password');
+        if ($request->hasfile('file')) {
+            $file = $request->file('file');
+            $extension = $request->file->getClientOriginalExtension();  //Get Image Extension
+            $fileName = uniqid() . '.' . $extension;  //Concatenate both to get FileName (eg: file.jpg)
+            $path = public_path() . '/avatar/';
+            //$file->move($path, $fileName);
+            // Resize and upload new avatar
+            $image_resize = Image::make($file->getRealPath());
+            $image_resize->fit(300, 300);
+            $image_resize->save($path . $fileName);
+            // Delete old avatar
+            if (is_file($path . $user->avatar)) {
+                unlink($path . $user->avatar);
+            }
+            $user->avatar = $fileName;
+        }
         $user->save();
-        return redirect('/user')->with('success', 'User updated!');
+        return redirect('/home')->with('status', 'User updated!');
     }
 
     /**

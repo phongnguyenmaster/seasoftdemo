@@ -1,27 +1,12 @@
 <template>
-  <div class="row">
-    <div class="col-3">
-      <ChatListUser></ChatListUser>
-    </div>
-    <div class="col-9">
-      <div class="chat">
-        <div class="chat-title">
-          <h1>Chatroom</h1>
-        </div>
-        <div class="messages scroll-height">
-          <div class="messages-content">
-            <ChatItem v-for="(message, index) in list_messages" :key="index" :message="message"></ChatItem>
-          </div>
-        </div>
-        <div class="message-box">
-          <input
-            type="text"
-            v-model="message"
-            @keyup.enter="sendMessage"
-            class="message-input form-control"
-            placeholder="Type message..."
-          />
-          <button type="button" class="message-submit btn btn-success" @click="sendMessage">Send</button>
+  <div>
+    <div class="chat">
+      <div class="chat-title">
+        <h1>Users List</h1>
+      </div>
+      <div class="userlist scroll-height">
+        <div class="userlist-content">
+          <ChatItem v-for="(message, index) in list_messages" :key="index" :message="message"></ChatItem>
         </div>
       </div>
     </div>
@@ -30,14 +15,10 @@
 
 <script>
 import ChatItem from "./ChatItemComponent.vue";
-import ChatListUser from "./ChatListUserComponent.vue";
-var socket = io.connect("http://192.168.134.1:3000");
-//var socketPrivate = io.connect("http://192.168.134.1:3000/privatechat");
 
 export default {
   components: {
     ChatItem,
-    ChatListUser,
   },
   data() {
     return {
@@ -50,7 +31,7 @@ export default {
     };
   },
   mounted() {
-    var container = this.$el.querySelector(".messages");
+    var container = this.$el.querySelector(".userlist");
     $(container).scroll(
       function (e) {
         var pos = $(e.target).scrollTop();
@@ -63,14 +44,10 @@ export default {
   },
   created() {
     this.loadMessage(this.page);
-    socket.on("MessagePosted", (msg) => {
-      //let message = msg
-      //message.user = data.user
-      this.list_messages.push(msg);
-    });
+
   },
   updated: function () {
-    var container = this.$el.querySelector(".messages");
+    var container = this.$el.querySelector(".userlist");
     if (!this.isLoadHistory) {
       container.scrollTop = container.scrollHeight;
     } else {
@@ -108,7 +85,6 @@ export default {
           message: messageContent,
         })
         .then((response) => {
-          socket.emit("newmessage", response.data.message);
         })
         .catch((error) => {
           console.log(error);
