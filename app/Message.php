@@ -17,7 +17,7 @@ class Message extends Model
     {
         $take = 20;
         $model = Message::with('user')->orderBy('id', 'desc');
-        $model->whereNull('private_key');
+        $model->where('private_key', 0);
         if ($lastIdHistory > 0) {
             $model->where('id', '<', $lastIdHistory);
         }

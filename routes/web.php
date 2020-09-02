@@ -45,7 +45,7 @@ Route::post('/newMessages', function () {
     $user = Auth::user();
     $message = new App\Message();
     $message->message = request()->get('message', '');
-    $message->private_key = request()->get('privateKey', '');;
+    $message->private_key = request()->get('privateKey', 0);;
     $message->user_id = $user->id;
     $message->save();
     return ['message' => $message->load('user')];
