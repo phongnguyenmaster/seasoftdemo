@@ -1,7 +1,6 @@
 <template>
   <div class="row mainchat">
     <div class="col-3">
-      <button class="btn btn-light" @click="switchToRoom">Room chat</button>
       <ChatListUser></ChatListUser>
     </div>
     <div class="col-9">
@@ -33,7 +32,6 @@ export default {
   computed: {
     currentProperties: function () {
       if (this.current === "ChatPrivate") {
-        alert(this.receiver_id);
         return { receiver_id: this.receiver_id };
       }
     },

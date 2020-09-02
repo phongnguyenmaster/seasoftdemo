@@ -12,36 +12,41 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 Auth::routes();
 
+// Main view
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('/home', 'HomeController@index')->name('home');
 
+// Load info user login
 Route::resource('user', 'UserController');
-Route::get('loadmessageroom/{lastIdHistory}', 'MessageController@getMessageChatRoom');
+
+Route::get('/getUserLogin', function () {
+    return Auth::user();
+})->middleware('auth');
+
 Route::get('loadlistuser/{page}', 'UserController@getListUser');
 
+// Public room
+Route::get('loadmessageroom/{lastIdHistory}', 'MessageController@getMessageChatRoom');
+
+// Private Room
+Route::get('getPrivateKey/{receiver_id}', 'MessageController@getPrivateKey');
+Route::post('loadMessagePrivate', 'MessageController@loadMessagePrivate');
+
+// Login
 Route::get('auth/social/{socialType}', 'Auth\LoginController@redirectToSocial');
 Route::get('auth/social/callback/{socialType}', 'Auth\LoginController@handleSocialCallback');
 
-Route::get('/chat', function() {
-    return view('chat');
+
+// Create new message
+Route::post('/newMessages', function () {
+    $user = Auth::user();
+    $message = new App\Message();
+    $message->message = request()->get('message', '');
+    $message->private_key = request()->get('privateKey', '');;
+    $message->user_id = $user->id;
+    $message->save();
+    return ['message' => $message->load('user')];
 })->middleware('auth');
-
-Route::get('/getUserLogin', function() {
-	return Auth::user();
-})->middleware('auth');
-
-Route::post('/newMessages', function() {
-   $user = Auth::user();
-
-  $message = new App\Message();
-  $message->message = request()->get('message', '');
-  $message->user_id = $user->id;
-  $message->save();
-
-  return ['message' => $message->load('user')];
-})->middleware('auth');
-
-
-

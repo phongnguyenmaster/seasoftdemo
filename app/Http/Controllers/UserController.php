@@ -52,7 +52,8 @@ class UserController extends Controller
             'email' => 'required',
             'password' => 'required'
         ]);
-
+        // Check email is exist
+        // TO DO LOGIC HERE (Nếu kịp thời gian thì viết)
         $contact = new User([
             'name' => $request->get('name'),
             'email' => $request->get('email'),
@@ -98,7 +99,8 @@ class UserController extends Controller
             'name' => 'required',
             'email' => 'required',
         ]);
-
+        // Check email is exist
+        // TO DO LOGIC HERE (Nếu kịp thời gian thì viết)
         $user = User::find($id);
         $user->name =  $request->get('name');
         $user->email = $request->get('email');

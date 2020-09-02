@@ -2035,7 +2035,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 
 
@@ -2057,7 +2056,6 @@ __webpack_require__.r(__webpack_exports__);
   computed: {
     currentProperties: function currentProperties() {
       if (this.current === "ChatPrivate") {
-        alert(this.receiver_id);
         return {
           receiver_id: this.receiver_id
         };
@@ -2221,7 +2219,8 @@ var socket = io.connect("http://192.168.134.1:3000"); //var socketPrivate = io.c
       currentHeight: 0,
       isLoadHistory: false,
       lastIdHistory: 0,
-      list_messages: []
+      list_messages: [],
+      privateKey: 0
     };
   },
   mounted: function mounted() {
@@ -2231,7 +2230,10 @@ var socket = io.connect("http://192.168.134.1:3000"); //var socketPrivate = io.c
 
       if (pos <= 0) {
         this.currentHeight = container.scrollHeight;
-        this.loadMessage(this.page);
+
+        if (this.lastIdHistory != 0) {
+          this.loadMessage(this.page);
+        }
       }
     }.bind(this));
   },
@@ -2239,7 +2241,6 @@ var socket = io.connect("http://192.168.134.1:3000"); //var socketPrivate = io.c
     var _this = this;
 
     this.changeReceiver();
-    this.loadMessage(this.page);
     socket.on("MessagePosted", function (msg) {
       //let message = msg
       //message.user = data.user
@@ -2258,23 +2259,42 @@ var socket = io.connect("http://192.168.134.1:3000"); //var socketPrivate = io.c
   },
   watch: {
     receiver_id: function receiver_id(newVal, oldVal) {
-      this.changeReceiver(); // watch it
+      this.changeReceiver();
     }
   },
   methods: {
     changeReceiver: function changeReceiver() {
-      alert("ischange");
+      this.loadPrivateKey();
+      this.list_messages = [];
+      this.lastIdHistory = 0;
     },
-    loadMessage: function loadMessage(page) {
+    loadPrivateKey: function loadPrivateKey() {
       var _this2 = this;
 
+      axios.get("/getPrivateKey/" + this.receiver_id).then(function (response) {
+        if (response.data.status == 1) {
+          _this2.privateKey = response.data.private_key;
+
+          _this2.loadMessage();
+        } else {
+          alert(response.data.message);
+        }
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    loadMessage: function loadMessage(page) {
+      var _this3 = this;
+
       this.isLoadHistory = true;
-      axios.get("/loadmessageroom/" + this.lastIdHistory).then(function (response) {
+      axios.post("/loadMessagePrivate", {
+        privateKey: this.privateKey,
+        lastIdHistory: this.lastIdHistory
+      }).then(function (response) {
         response.data.forEach(function (i) {
-          return _this2.list_messages.unshift(i);
+          return _this3.list_messages.unshift(i);
         });
-        _this2.page++;
-        _this2.lastIdHistory = response.data[response.data.length - 1]["id"];
+        _this3.lastIdHistory = response.data[response.data.length - 1]["id"];
       })["catch"](function (error) {
         console.log(error);
       });
@@ -2290,7 +2310,8 @@ var socket = io.connect("http://192.168.134.1:3000"); //var socketPrivate = io.c
       };
       this.list_messages.push(newMessage);
       axios.post("/newMessages", {
-        message: messageContent
+        message: messageContent,
+        privateKey: this.privateKey
       }).then(function (response) {
         socket.emit("newmessage", response.data.message);
       })["catch"](function (error) {
@@ -49182,20 +49203,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "row mainchat" }, [
-    _c(
-      "div",
-      { staticClass: "col-3" },
-      [
-        _c(
-          "button",
-          { staticClass: "btn btn-light", on: { click: _vm.switchToRoom } },
-          [_vm._v("Room chat")]
-        ),
-        _vm._v(" "),
-        _c("ChatListUser")
-      ],
-      1
-    ),
+    _c("div", { staticClass: "col-3" }, [_c("ChatListUser")], 1),
     _vm._v(" "),
     _c(
       "div",

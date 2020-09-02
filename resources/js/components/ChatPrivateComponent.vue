@@ -43,6 +43,7 @@ export default {
       isLoadHistory: false,
       lastIdHistory: 0,
       list_messages: [],
+      privateKey: 0,
     };
   },
   mounted() {
@@ -52,14 +53,15 @@ export default {
         var pos = $(e.target).scrollTop();
         if (pos <= 0) {
           this.currentHeight = container.scrollHeight;
-          this.loadMessage(this.page);
+          if (this.lastIdHistory != 0) {
+            this.loadMessage(this.page);
+          }
         }
       }.bind(this)
     );
   },
   created() {
     this.changeReceiver();
-    this.loadMessage(this.page);
     socket.on("MessagePosted", (msg) => {
       //let message = msg
       //message.user = data.user
@@ -79,20 +81,38 @@ export default {
   watch: {
     receiver_id: function (newVal, oldVal) {
       this.changeReceiver();
-      // watch it
     },
   },
   methods: {
     changeReceiver() {
-      alert("ischange");
+      this.loadPrivateKey();
+      this.list_messages = [];
+      this.lastIdHistory = 0;
+    },
+    loadPrivateKey() {
+      axios
+        .get("/getPrivateKey/" + this.receiver_id)
+        .then((response) => {
+          if (response.data.status == 1) {
+            this.privateKey = response.data.private_key;
+            this.loadMessage();
+          } else {
+            alert(response.data.message);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     loadMessage(page) {
       this.isLoadHistory = true;
       axios
-        .get("/loadmessageroom/" + this.lastIdHistory)
+        .post("/loadMessagePrivate", {
+          privateKey: this.privateKey,
+          lastIdHistory: this.lastIdHistory,
+        })
         .then((response) => {
           response.data.forEach((i) => this.list_messages.unshift(i));
-          this.page++;
           this.lastIdHistory = response.data[response.data.length - 1]["id"];
         })
         .catch((error) => {
@@ -112,6 +132,7 @@ export default {
       axios
         .post("/newMessages", {
           message: messageContent,
+          privateKey: this.privateKey,
         })
         .then((response) => {
           socket.emit("newmessage", response.data.message);
