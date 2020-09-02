@@ -4,6 +4,7 @@
 <div class="row">
  <div class="col-sm-8 offset-sm-2">
     <h1 class="display-3">Create New Account</h1>
+    (Demo screen. Vui lòng không test trang này)
   <div>
     @if ($errors->any())
       <div class="alert alert-danger">

@@ -40,4 +40,13 @@ class User extends Authenticatable
     {
         return $this->hasMany(Message::class);
     }
+    public function getListUser($page) {
+        $take = 10;
+        $skip = 0;
+        if ($page > 1) {
+            $skip = $take * ($page - 1);
+        }
+        $model = User::orderBy('updated_at', 'desc')->skip($skip)->take($take);
+        return $model->get();
+    }
 }

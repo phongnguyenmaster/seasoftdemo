@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use Intervention\Image\ImageManagerStatic as Image;
-
+use Validator;
 class UserController extends Controller
 {
     /**
@@ -18,7 +18,17 @@ class UserController extends Controller
         $users = User::all();
         return view('user.index', compact('users'));
     }
-
+    function getListUser($page)
+    {
+        $validator = Validator::make(array('page' => $page), [
+            'page' => 'required|numeric',
+        ]);
+        if ($validator->fails()) {
+            return abort(404);
+        }
+        $user = new User();
+        return $user->getListUser($page);
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -126,4 +136,5 @@ class UserController extends Controller
 
         return redirect('/user')->with('success', 'User deleted!');
     }
+
 }

@@ -4,6 +4,7 @@
 <div class="row">
     <div class="col-sm-12">
         <h1 class="display-3">Users</h1>
+        (Demo screen. Vui lòng không test trang này)
         <div class="col-sm-12">
             @if(session()->get('success'))
             <div class="alert alert-success">

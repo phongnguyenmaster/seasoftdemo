@@ -18,7 +18,8 @@ Route::get('/', 'HomeController@index')->name('home');
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::resource('user', 'UserController');
-Route::get('loadmessageroom/{page}', 'MessageController@getMessageChatRoom');
+Route::get('loadmessageroom/{lastIdHistory}', 'MessageController@getMessageChatRoom');
+Route::get('loadlistuser/{page}', 'UserController@getListUser');
 
 Route::get('auth/social/{socialType}', 'Auth\LoginController@redirectToSocial');
 Route::get('auth/social/callback/{socialType}', 'Auth\LoginController@handleSocialCallback');

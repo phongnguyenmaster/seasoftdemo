@@ -1,24 +1,36 @@
 <template>
-  <div>
-    <div class="chat">
-      <div class="chat-title">
-        <h1>Users List</h1>
+  <div class="chat">
+      ROOM
+    <div class="chat-title">
+      <h1>Chatroom</h1>
+    </div>
+    <div class="messages scroll-height">
+      <div class="messages-content">
+        <ChatItem v-for="(message, index) in list_messages" :key="index" :message="message"></ChatItem>
       </div>
-      <div class="userlist scroll-height">
-        <div class="userlist-content">
-          <ChatUserItem v-for="(user, index) in list_user" :key="index" :user="user"></ChatUserItem>
-        </div>
-      </div>
+    </div>
+    <div class="message-box">
+      <input
+        type="text"
+        v-model="message"
+        @keyup.enter="sendMessage"
+        class="message-input form-control"
+        placeholder="Type message..."
+      />
+      <button type="button" class="message-submit btn btn-success" @click="sendMessage">Send</button>
     </div>
   </div>
 </template>
 
 <script>
-import ChatUserItem from "./ChatUserItemComponent.vue";
+import ChatItem from "./ChatItemComponent.vue";
+import ChatListUser from "./ChatListUserComponent.vue";
+var socket = io.connect("http://192.168.134.1:3000");
+//var socketPrivate = io.connect("http://192.168.134.1:3000/privatechat");
 
 export default {
   components: {
-    ChatUserItem,
+    ChatItem,
   },
   data() {
     return {
@@ -27,11 +39,11 @@ export default {
       currentHeight: 0,
       isLoadHistory: false,
       lastIdHistory: 0,
-      list_user: [],
+      list_messages: [],
     };
   },
   mounted() {
-    var container = this.$el.querySelector(".userlist");
+    var container = this.$el.querySelector(".messages");
     $(container).scroll(
       function (e) {
         var pos = $(e.target).scrollTop();
@@ -44,10 +56,14 @@ export default {
   },
   created() {
     this.loadMessage(this.page);
-
+    socket.on("MessagePosted", (msg) => {
+      //let message = msg
+      //message.user = data.user
+      this.list_messages.push(msg);
+    });
   },
   updated: function () {
-    var container = this.$el.querySelector(".userlist");
+    var container = this.$el.querySelector(".messages");
     if (!this.isLoadHistory) {
       container.scrollTop = container.scrollHeight;
     } else {
@@ -60,9 +76,9 @@ export default {
     loadMessage(page) {
       this.isLoadHistory = true;
       axios
-        .get("/loadlistuser/" + this.page)
+        .get("/loadmessageroom/" + this.lastIdHistory)
         .then((response) => {
-          response.data.forEach((i) => this.list_user.push(i));
+          response.data.forEach((i) => this.list_messages.unshift(i));
           this.page++;
           this.lastIdHistory = response.data[response.data.length - 1]["id"];
         })
@@ -71,11 +87,21 @@ export default {
         });
     },
     sendMessage() {
+      // Append message before send to server.
+      var messageContent = this.message;
+      this.message = "";
+      var newMessage = {
+        message: messageContent,
+        user: this.$root.currentUserLogin,
+        created_at: Date.now().toString(),
+      };
+      this.list_messages.push(newMessage);
       axios
         .post("/newMessages", {
           message: messageContent,
         })
         .then((response) => {
+          socket.emit("newmessage", response.data.message);
         })
         .catch((error) => {
           console.log(error);
@@ -97,6 +123,7 @@ Body
 /*--------------------
 Chat
 --------------------*/
+
 .chat {
   height: calc(100vh - 55px);
   max-height: 700px;
@@ -104,22 +131,22 @@ Chat
   overflow: hidden;
   background: white;
   display: flex;
+  justify-content: space-between;
   flex-direction: column;
 }
 /*--------------------
 Chat Title
 --------------------*/
-.userlist  {
-    margin-top: 8px;
-}
 .chat-title {
   flex: 0 1 45px;
   position: relative;
   z-index: 2;
   background: #fff;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
   text-transform: uppercase;
   text-align: left;
-  padding: 10px 0px 10px 0px;
+  padding: 10px 10px 10px 20px;
+  margin-left: -15px;
 
   h1,
   h2 {
@@ -133,7 +160,6 @@ Chat Title
     font-size: 8px;
     letter-spacing: 1px;
   }
-
   .avatar {
     position: absolute;
     z-index: 1;
@@ -177,3 +203,4 @@ Message Box
   }
 }
 </style>
+

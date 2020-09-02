@@ -33,6 +33,15 @@
   border: none;
 }
 
+.boxshadow {
+  box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.1);
+}
+
+.navbar {
+  position: relative;
+  z-index: 10;
+}
+
 /*!
  * Bootstrap v4.5.2 (https://getbootstrap.com/)
  * Copyright 2011-2020 The Bootstrap Authors
