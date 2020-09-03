@@ -6,7 +6,24 @@
       </div>
       <div class="userlist scroll-height">
         <div class="userlist-content">
-          <ChatUserItem v-for="(user, index) in list_user" :key="index" :user="user"></ChatUserItem>
+          <div @click="roomChat" class="user" :class="{ active: activeIndex === null }">
+            <div class="user-item">
+              <div class="user-avatar">
+                <img src="/public/icon/chatroom.jpg" />
+              </div>
+              <div class="user-name">
+                ROOM CHAT
+                <div class="time">All people</div>
+              </div>
+            </div>
+          </div>
+          <ChatUserItem
+            v-for="(user, index) in list_user"
+            :key="index"
+            :user="user"
+            :isActive="activeIndex === index"
+            @onToggle="onToggle(index)"
+          ></ChatUserItem>
         </div>
       </div>
     </div>
@@ -28,6 +45,7 @@ export default {
       isLoadHistory: false,
       lastIdHistory: 0,
       list_user: [],
+      activeIndex: null,
     };
   },
   mounted() {
@@ -44,7 +62,6 @@ export default {
   },
   created() {
     this.loadMessage(this.page);
-
   },
   updated: function () {
     var container = this.$el.querySelector(".userlist");
@@ -70,16 +87,16 @@ export default {
           console.log(error);
         });
     },
-    sendMessage() {
-      axios
-        .post("/newMessages", {
-          message: messageContent,
-        })
-        .then((response) => {
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+    onToggle(index) {
+      if (this.activeIndex === index) {
+        this.activeIndex = null;
+      } else {
+        this.activeIndex = index;
+      }
+    },
+    roomChat() {
+      this.onToggle(null);
+      this.$parent.switchToRoom();
     },
   },
 };
@@ -109,8 +126,9 @@ Chat
 /*--------------------
 Chat Title
 --------------------*/
-.userlist  {
-    margin-top: 8px;
+
+.userlist {
+  margin-top: 8px;
 }
 .chat-title {
   flex: 0 1 45px;

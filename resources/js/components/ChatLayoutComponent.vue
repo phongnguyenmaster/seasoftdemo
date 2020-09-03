@@ -55,7 +55,8 @@ export default {
     background-color: #fff;
   }
   .col-3 {
-    padding-right: 0px;
+    padding-right: 4px;
+    padding-left: 4px;
     border-right: 1px solid #dedbdb;
   }
   .col-9 {

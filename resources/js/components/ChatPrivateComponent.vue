@@ -25,8 +25,8 @@
 <script>
 import ChatItem from "./ChatItemComponent.vue";
 import ChatListUser from "./ChatListUserComponent.vue";
-var socket = io.connect("http://192.168.134.1:3000");
-//var socketPrivate = io.connect("http://192.168.134.1:3000/privatechat");
+//var socket = io.connect("http://192.168.134.1:3000");
+var socket = io.connect("http://192.168.134.1:3000/privatechat");
 
 export default {
   components: {
@@ -90,12 +90,16 @@ export default {
       this.lastIdHistory = 0;
     },
     loadPrivateKey() {
+      if (this.privateKey > 0) {
+        socket.emit("unregisterregister", this.privateKey);
+      }
       axios
         .get("/getPrivateKey/" + this.receiver_id)
         .then((response) => {
           if (response.data.status == 1) {
             this.privateKey = response.data.private_key;
             this.loadMessage();
+            socket.emit("register", this.privateKey);
           } else {
             alert(response.data.message);
           }
@@ -135,7 +139,9 @@ export default {
           privateKey: this.privateKey,
         })
         .then((response) => {
-          socket.emit("newmessage", response.data.message);
+          response.data.message.privateKey = this.privateKey;
+          console.log(response.data);
+          socket.emit("private_chat", response.data.message);
         })
         .catch((error) => {
           console.log(error);

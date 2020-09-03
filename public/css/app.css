@@ -42,6 +42,43 @@
   z-index: 10;
 }
 
+.user {
+  border-radius: 10px;
+}
+
+.user .user-item {
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
+  padding-right: 8px;
+  height: 64px;
+}
+
+.user .user-item .user-avatar {
+  margin-right: 12px;
+}
+
+.user .user-item .user-avatar img {
+  width: 50px;
+  height: 50px;
+  border-radius: 100%;
+  border: 1px solid #e4e6eb;
+}
+
+.user .user-item .user-name .time {
+  color: #999999;
+  font-size: 13px;
+}
+
+.user :hover {
+  cursor: pointer;
+}
+
+.user.active {
+  background-color: #f2f2f2;
+  transition: 0.5s;
+}
+
 /*!
  * Bootstrap v4.5.2 (https://getbootstrap.com/)
  * Copyright 2011-2020 The Bootstrap Authors

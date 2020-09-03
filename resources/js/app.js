@@ -5,7 +5,10 @@
  */
 
 require('./bootstrap');
+
 window.Vue = require('vue');
+Vue.use(require('vue-moment'));
+
 window.io = window.io = require('socket.io-client');
 
 /**
