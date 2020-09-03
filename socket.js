@@ -13,7 +13,6 @@ io.on('connection', (socket) => {
 
 // Private Chat
 // Cteate room chat for per 1-1 client.
-// Private key is very simple, that is a demo. Chạy thực tế private key sẽ hashstring. Không ai biết được.
 const privateChat = io.of('/privatechat');
 privateChat.on('connection', socket => {
     socket.on('register', function (privateKey) {

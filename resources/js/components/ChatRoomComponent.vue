@@ -5,22 +5,29 @@
     </div>
     <div class="messages scroll-height">
       <div class="messages-content">
-        <ChatItem v-for="(message, index) in list_messages" :key="index" :message="message"></ChatItem>
+        <ChatItem
+          v-for="(message, index) in list_messages"
+          :beforeId="index > 0 ? list_messages[index - 1].user.id : 0"
+          :isRoom="true"
+          :key="index"
+          :message="message"
+        ></ChatItem>
       </div>
     </div>
     <div class="message-box">
       <input
         type="text"
-        v-model="message"
         @keyup.enter="sendMessage"
         class="message-input form-control"
+        id="txtMessage"
         placeholder="Type message..."
       />
-      <button type="button" class="message-submit btn btn-success" @click="sendMessage">Send</button>
+      <button type="button" class="message-submit btn btn-success" @click="sendMessage">
+        <i class="fa fa-paper-plane"></i> Send
+      </button>
     </div>
   </div>
 </template>
-
 <script>
 import ChatItem from "./ChatItemComponent.vue";
 import ChatListUser from "./ChatListUserComponent.vue";
@@ -86,6 +93,8 @@ export default {
         });
     },
     sendMessage() {
+      this.message = this.$el.querySelector("#txtMessage").value;
+      this.$el.querySelector("#txtMessage").value = "";
       if (this.message.length == 0) {
         return;
       }
@@ -95,7 +104,7 @@ export default {
       var newMessage = {
         message: messageContent,
         user: this.$root.currentUserLogin,
-        created_at: Date.now().toString(),
+        created_at: Date.now(),
       };
       this.list_messages.push(newMessage);
       axios
@@ -147,12 +156,11 @@ Chat Title
   position: relative;
   z-index: 2;
   background: #fff;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
   text-transform: uppercase;
   text-align: left;
   padding: 20px;
   margin-left: -15px;
-
+  border-bottom: 1px solid #dedbdb;
   h1,
   h2 {
     font-weight: bold;

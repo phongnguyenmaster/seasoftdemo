@@ -40,7 +40,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(Message::class);
     }
-    public function getListUser($page) {
+    public function getListUser($page)
+    {
         $take = 10;
         $skip = 0;
         if ($page > 1) {
@@ -48,5 +49,14 @@ class User extends Authenticatable
         }
         $model = User::orderBy('updated_at', 'desc')->skip($skip)->take($take);
         return $model->get();
+    }
+    public function checkIfUserExist($email)
+    {
+        $user = User::where('email', $email)->first();
+        if ($user) {
+            return $user;
+        } else {
+            return false;
+        }
     }
 }

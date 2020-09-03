@@ -53,7 +53,7 @@ export default {
     $(container).scroll(
       function (e) {
         var pos = $(e.target).scrollTop();
-        if (pos <= 0) {
+        if (pos >= container.scrollHeight) {
           this.currentHeight = container.scrollHeight;
           this.loadMessage(this.page);
         }
@@ -66,10 +66,9 @@ export default {
   updated: function () {
     var container = this.$el.querySelector(".userlist");
     if (!this.isLoadHistory) {
-      container.scrollTop = container.scrollHeight;
+      container.scrollTop = 0;
     } else {
-      container.scrollTop =
-        $(container).children(0).height() - this.currentHeight;
+      //container.scrollTop = $(container).children(0).height() - this.currentHeight;
       this.isLoadHistory = false;
     }
   },
@@ -136,8 +135,7 @@ Chat Title
   text-transform: uppercase;
   text-align: left;
   padding: 20px;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
-
+    border-bottom: 1px solid #dedbdb;
   h1,
   h2 {
     font-weight: bold;

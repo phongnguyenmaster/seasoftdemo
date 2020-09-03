@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\User;
 use Intervention\Image\ImageManagerStatic as Image;
 use Validator;
+
 class UserController extends Controller
 {
     /**
@@ -138,5 +139,4 @@ class UserController extends Controller
 
         return redirect('/user')->with('success', 'User deleted!');
     }
-
 }

@@ -3,15 +3,21 @@
     class="message"
     :class="($root.currentUserLogin.id !== message.user.id ? 'reply-chat': 'my-chat')"
   >
-    <div class="img">
+    <div
+      class="img"
+      v-if="(beforeId != message.user.id) && ($root.currentUserLogin.id !== message.user.id)"
+    >
       <img
-        v-if="$root.currentUserLogin.id !== message.user.id"
         v-bind:src="'/public/avatar/' + (message.user.avatar !== null ? message.user.avatar : 'default.jpg')"
       />
     </div>
     <div class="content">
-      {{ message.message }}
-      <div class="timestamp">{{ message.created_at }}</div>
+      <div
+        class="name"
+        v-if="isRoom && (beforeId != message.user.id) && ($root.currentUserLogin.id !== message.user.id)"
+      >{{ message.user.name }}</div>
+      <div class="messagecontent">{{ message.message }}</div>
+      <div class="timestamp">{{ message.created_at | moment("from", "now") }}</div>
     </div>
   </div>
 </template>
@@ -23,13 +29,34 @@ export default {
       type: Object,
       default: {},
     },
+    beforeId: 0,
+    isRoom: false,
   },
 };
 </script>
 
 <style lang="scss" scoped>
+.message {
+  position: relative;
+  .content {
+    padding: 5px 8px 6px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    border-radius: 0px 8px 8px 8px;
+    word-break: break-word;
+  }
+  .name {
+    font-weight: bold;
+  }
+  .timestamp,
+  .name {
+    opacity: 0.6;
+    font-size: 12px;
+  }
+}
 .reply-chat {
   .img {
+    position: absolute;
     img {
       width: 40px;
       height: 40px;
@@ -41,35 +68,16 @@ export default {
   }
   .content {
     background-color: #f1f0f0;
-    float: left;
-    padding: 5px 8px 6px;
     color: #4b4f56;
-    margin-right: 30px;
-    margin-top: 2px;
-    margin-bottom: 2px;
-    border-radius: 0px 8px 8px 8px;
-    font-size: 12px;
-    word-break: break-word;
+    float: left;
+    margin-left: 45px;
   }
 }
 .my-chat {
   .content {
     background-color: #4080ff;
-    float: right;
-    padding: 5px 8px 6px;
     color: white;
-    margin-left: 30px;
-    margin-top: 2px;
-    margin-bottom: 2px;
-    border-radius: 8px 0px 8px 8px;
-    font-size: 12px;
-    word-break: break-word;
+    float: right;
   }
-}
-.message:not(:last-child) {
-  padding-bottom: 20px;
-}
-.is-current-user {
-  color: #a900ff;
 }
 </style>

@@ -1,11 +1,17 @@
 <template>
   <div class="chat">
     <div class="chat-title">
-      <h1>Chatroom</h1>
+      <h1>PRIVATE CHAT</h1>
     </div>
     <div class="messages scroll-height">
       <div class="messages-content">
-        <ChatItem v-for="(message, index) in list_messages" :key="index" :message="message"></ChatItem>
+        <ChatItem
+          v-for="(message, index) in list_messages"
+          :beforeId="index > 0 ? list_messages[index - 1].user.id : 0"
+                    :isRoom="false"
+          :key="index"
+          :message="message"
+        ></ChatItem>
       </div>
     </div>
     <div class="message-box">
@@ -16,7 +22,9 @@
         class="message-input form-control"
         placeholder="Type message..."
       />
-      <button type="button" class="message-submit btn btn-success" @click="sendMessage">Send</button>
+      <button type="button" class="message-submit btn btn-success" @click="sendMessage">
+        <i class="fa fa-paper-plane"></i> Send
+      </button>
     </div>
   </div>
 </template>
@@ -132,7 +140,7 @@ export default {
       var newMessage = {
         message: messageContent,
         user: this.$root.currentUserLogin,
-        created_at: Date.now().toString(),
+        created_at: Date.now(),
       };
       this.list_messages.push(newMessage);
       axios
@@ -190,9 +198,8 @@ Chat Title
   text-transform: uppercase;
   text-align: left;
   padding: 20px;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
   margin-left: -15px;
-
+  border-bottom: 1px solid #dedbdb;
   h1,
   h2 {
     font-weight: bold;
