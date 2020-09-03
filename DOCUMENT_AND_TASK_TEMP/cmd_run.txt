@@ -1,0 +1,15 @@
+php artisan make:controller LoginController --resource
+php artisan make:controller UserController --resource
+composer dump-autoload
+
+// Build css, js
+@import "node_modules/font-awesome/scss/font-awesome.scss";
+npm run dev
+npm run watch
+
+// Create model
+php artisan make:model Messages
+(-m: mig)
+
+// Start node
+node app.js
