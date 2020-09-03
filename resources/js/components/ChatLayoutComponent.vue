@@ -6,6 +6,7 @@
     <div class="col-9">
       <component :is="current" v-bind="currentProperties"></component>
     </div>
+
   </div>
 </template>
 
@@ -55,12 +56,13 @@ export default {
     background-color: #fff;
   }
   .col-3 {
-    padding-right: 4px;
-    padding-left: 4px;
+    padding-right: 0px;
+    padding-left: 0px;
     border-right: 1px solid #dedbdb;
   }
   .col-9 {
     padding-left: 0px;
+    padding-right: 0px;
   }
 }
 </style>

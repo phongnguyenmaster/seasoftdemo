@@ -18,3 +18,11 @@ $green: #38c172;
 $teal: #4dc0b5;
 $cyan: #6cb2eb;
 $grey: #dadce0;
+$greybox: #F2F2F2;
+
+$breakpoint-mobile: 480px;
+
+@mixin mobile { @media (max-width: #{$breakpoint-mobile}) {
+  @content;
+ }
+}

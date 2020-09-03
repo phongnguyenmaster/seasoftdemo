@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 class Message extends Model
 {
     protected $fillable = ['user_id', 'private_key', 'message'];
-
+    private $hashKey = 'KEYCHATPRIVATE';
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -43,6 +43,7 @@ class Message extends Model
         } else {
             $private_key =  $user_id . $receiver_id;
         }
+        $private_key =  crc32(md5($private_key . $this->hashKey));
         return $private_key;
     }
 }

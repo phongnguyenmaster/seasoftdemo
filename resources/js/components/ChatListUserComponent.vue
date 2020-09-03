@@ -2,16 +2,16 @@
   <div>
     <div class="chat">
       <div class="chat-title">
-        <h1>Users List</h1>
+        <h1>CHAT</h1>
       </div>
       <div class="userlist scroll-height">
         <div class="userlist-content">
-          <div @click="roomChat" class="user" :class="{ active: activeIndex === null }">
+          <div @click="roomChat" class="user" :class="{ active: activeIndex === 0 }">
             <div class="user-item">
               <div class="user-avatar">
                 <img src="/public/icon/chatroom.jpg" />
               </div>
-              <div class="user-name">
+              <div class="user-name hiddenwidth">
                 ROOM CHAT
                 <div class="time">All people</div>
               </div>
@@ -21,8 +21,8 @@
             v-for="(user, index) in list_user"
             :key="index"
             :user="user"
-            :isActive="activeIndex === index"
-            @onToggle="onToggle(index)"
+            :isActive="activeIndex === index + 1"
+            @onToggle="onToggle(index+1)"
           ></ChatUserItem>
         </div>
       </div>
@@ -45,7 +45,7 @@ export default {
       isLoadHistory: false,
       lastIdHistory: 0,
       list_user: [],
-      activeIndex: null,
+      activeIndex: 0,
     };
   },
   mounted() {
@@ -88,14 +88,10 @@ export default {
         });
     },
     onToggle(index) {
-      if (this.activeIndex === index) {
-        this.activeIndex = null;
-      } else {
-        this.activeIndex = index;
-      }
+      this.activeIndex = index;
     },
     roomChat() {
-      this.onToggle(null);
+      this.onToggle(0);
       this.$parent.switchToRoom();
     },
   },
@@ -129,6 +125,8 @@ Chat Title
 
 .userlist {
   margin-top: 8px;
+  margin-left: 4px;
+  margin-right: 4px;
 }
 .chat-title {
   flex: 0 1 45px;
@@ -137,7 +135,8 @@ Chat Title
   background: #fff;
   text-transform: uppercase;
   text-align: left;
-  padding: 10px 0px 10px 0px;
+  padding: 20px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
 
   h1,
   h2 {

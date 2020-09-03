@@ -4,7 +4,7 @@
       <div class="user-avatar">
         <img v-bind:src="'/public/avatar/' + (user.avatar !== null ? user.avatar : 'default.jpg')" />
       </div>
-      <div class="user-name">
+      <div class="user-name hiddenwidth">
         {{ user.name}}
         <div class="time">{{ user.updated_at | moment("from", "now") }}</div>
       </div>

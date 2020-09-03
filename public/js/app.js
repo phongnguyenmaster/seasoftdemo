@@ -2001,6 +2001,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     message: {
@@ -2024,6 +2028,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ChatListUserComponent_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ChatListUserComponent.vue */ "./resources/js/components/ChatListUserComponent.vue");
 /* harmony import */ var _ChatRoomComponent_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ChatRoomComponent.vue */ "./resources/js/components/ChatRoomComponent.vue");
 /* harmony import */ var _ChatPrivateComponent_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ChatPrivateComponent.vue */ "./resources/js/components/ChatPrivateComponent.vue");
+//
 //
 //
 //
@@ -2130,7 +2135,7 @@ __webpack_require__.r(__webpack_exports__);
       isLoadHistory: false,
       lastIdHistory: 0,
       list_user: [],
-      activeIndex: null
+      activeIndex: 0
     };
   },
   mounted: function mounted() {
@@ -2173,14 +2178,10 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     onToggle: function onToggle(index) {
-      if (this.activeIndex === index) {
-        this.activeIndex = null;
-      } else {
-        this.activeIndex = index;
-      }
+      this.activeIndex = index;
     },
     roomChat: function roomChat() {
-      this.onToggle(null);
+      this.onToggle(0);
       this.$parent.switchToRoom();
     }
   }
@@ -2199,7 +2200,6 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ChatItemComponent_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ChatItemComponent.vue */ "./resources/js/components/ChatItemComponent.vue");
 /* harmony import */ var _ChatListUserComponent_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ChatListUserComponent.vue */ "./resources/js/components/ChatListUserComponent.vue");
-//
 //
 //
 //
@@ -2330,7 +2330,11 @@ var socket = io.connect("http://192.168.134.1:3000/privatechat");
     sendMessage: function sendMessage() {
       var _this4 = this;
 
-      // Append message before send to server.
+      if (this.message.length == 0) {
+        return;
+      } // Append message before send to server.
+
+
       var messageContent = this.message;
       this.message = "";
       var newMessage = {
@@ -2366,7 +2370,6 @@ var socket = io.connect("http://192.168.134.1:3000/privatechat");
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ChatItemComponent_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ChatItemComponent.vue */ "./resources/js/components/ChatItemComponent.vue");
 /* harmony import */ var _ChatListUserComponent_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ChatListUserComponent.vue */ "./resources/js/components/ChatListUserComponent.vue");
-//
 //
 //
 //
@@ -2455,7 +2458,11 @@ var socket = io.connect("http://192.168.134.1:3000"); //var socketPrivate = io.c
       });
     },
     sendMessage: function sendMessage() {
-      // Append message before send to server.
+      if (this.message.length == 0) {
+        return;
+      } // Append message before send to server.
+
+
       var messageContent = this.message;
       this.message = "";
       var newMessage = {
@@ -9474,7 +9481,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".message[data-v-46f276d7] {\n  display: flex;\n  color: #00b8ff;\n}\n.message .message-item[data-v-46f276d7]:not(:last-child) {\n  margin-right: 5px;\n}\n.message[data-v-46f276d7]:not(:last-child) {\n  padding-bottom: 20px;\n}\n.is-current-user[data-v-46f276d7] {\n  color: #a900ff;\n}", ""]);
+exports.push([module.i, ".reply-chat .img img[data-v-46f276d7] {\n  width: 40px;\n  height: 40px;\n  border-radius: 100%;\n  float: left;\n  border: 1px solid #f1f0f0;\n  margin: 1px;\n}\n.reply-chat .content[data-v-46f276d7] {\n  background-color: #f1f0f0;\n  float: left;\n  padding: 5px 8px 6px;\n  color: #4b4f56;\n  margin-right: 30px;\n  margin-top: 2px;\n  margin-bottom: 2px;\n  border-radius: 0px 8px 8px 8px;\n  font-size: 12px;\n  word-break: break-word;\n}\n.my-chat .content[data-v-46f276d7] {\n  background-color: #4080ff;\n  float: right;\n  padding: 5px 8px 6px;\n  color: white;\n  margin-left: 30px;\n  margin-top: 2px;\n  margin-bottom: 2px;\n  border-radius: 8px 0px 8px 8px;\n  font-size: 12px;\n  word-break: break-word;\n}\n.message[data-v-46f276d7]:not(:last-child) {\n  padding-bottom: 20px;\n}\n.is-current-user[data-v-46f276d7] {\n  color: #a900ff;\n}", ""]);
 
 // exports
 
@@ -9493,7 +9500,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".mainchat .col-3[data-v-3e943a40],\n.mainchat .col-9[data-v-3e943a40] {\n  background-color: #fff;\n}\n.mainchat .col-3[data-v-3e943a40] {\n  padding-right: 4px;\n  padding-left: 4px;\n  border-right: 1px solid #dedbdb;\n}\n.mainchat .col-9[data-v-3e943a40] {\n  padding-left: 0px;\n}", ""]);
+exports.push([module.i, ".mainchat .col-3[data-v-3e943a40],\n.mainchat .col-9[data-v-3e943a40] {\n  background-color: #fff;\n}\n.mainchat .col-3[data-v-3e943a40] {\n  padding-right: 0px;\n  padding-left: 0px;\n  border-right: 1px solid #dedbdb;\n}\n.mainchat .col-9[data-v-3e943a40] {\n  padding-left: 0px;\n  padding-right: 0px;\n}", ""]);
 
 // exports
 
@@ -9512,7 +9519,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".messages[data-v-1e63fda1] {\n  height: 100%;\n  overflow-y: scroll;\n  padding: 0 20px;\n}\n\n/*--------------------\nBody\n--------------------*/\n/*--------------------\nChat\n--------------------*/\n.chat[data-v-1e63fda1] {\n  height: calc(100vh - 55px);\n  max-height: 700px;\n  z-index: 2;\n  overflow: hidden;\n  background: white;\n  display: flex;\n  flex-direction: column;\n}\n\n/*--------------------\nChat Title\n--------------------*/\n.userlist[data-v-1e63fda1] {\n  margin-top: 8px;\n}\n.chat-title[data-v-1e63fda1] {\n  flex: 0 1 45px;\n  position: relative;\n  z-index: 2;\n  background: #fff;\n  text-transform: uppercase;\n  text-align: left;\n  padding: 10px 0px 10px 0px;\n}\n.chat-title h1[data-v-1e63fda1],\n.chat-title h2[data-v-1e63fda1] {\n  font-weight: bold;\n  font-size: 16px;\n  margin: 0;\n  padding: 0;\n}\n.chat-title h2[data-v-1e63fda1] {\n  color: rgba(255, 255, 255, 0.5);\n  font-size: 8px;\n  letter-spacing: 1px;\n}\n.chat-title .avatar[data-v-1e63fda1] {\n  position: absolute;\n  z-index: 1;\n  top: 8px;\n  left: 9px;\n  border-radius: 30px;\n  width: 30px;\n  height: 30px;\n  overflow: hidden;\n  margin: 0;\n  padding: 0;\n  border: 2px solid rgba(255, 255, 255, 0.24);\n}\n.chat-title .avatar img[data-v-1e63fda1] {\n  width: 100%;\n  height: auto;\n}\n\n/*--------------------\nMessage Box\n--------------------*/\n.message-box[data-v-1e63fda1] {\n  flex: 0 1 40px;\n  width: 100%;\n  padding: 10px;\n  position: relative;\n}\n.message-box textarea[data-v-1e63fda1]:focus:-webkit-placeholder {\n  color: transparent;\n}\n.message-box .message-submit[data-v-1e63fda1] {\n  z-index: 1;\n  top: 9px;\n  right: 10px;\n  transition: background 0.2s ease;\n  position: absolute;\n}\n.message-box .message-submit[data-v-1e63fda1]:hover {\n  background: #1d7745;\n}", ""]);
+exports.push([module.i, ".messages[data-v-1e63fda1] {\n  height: 100%;\n  overflow-y: scroll;\n  padding: 0 20px;\n}\n\n/*--------------------\nBody\n--------------------*/\n/*--------------------\nChat\n--------------------*/\n.chat[data-v-1e63fda1] {\n  height: calc(100vh - 55px);\n  max-height: 700px;\n  z-index: 2;\n  overflow: hidden;\n  background: white;\n  display: flex;\n  flex-direction: column;\n}\n\n/*--------------------\nChat Title\n--------------------*/\n.userlist[data-v-1e63fda1] {\n  margin-top: 8px;\n  margin-left: 4px;\n  margin-right: 4px;\n}\n.chat-title[data-v-1e63fda1] {\n  flex: 0 1 45px;\n  position: relative;\n  z-index: 2;\n  background: #fff;\n  text-transform: uppercase;\n  text-align: left;\n  padding: 20px;\n  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);\n}\n.chat-title h1[data-v-1e63fda1],\n.chat-title h2[data-v-1e63fda1] {\n  font-weight: bold;\n  font-size: 16px;\n  margin: 0;\n  padding: 0;\n}\n.chat-title h2[data-v-1e63fda1] {\n  color: rgba(255, 255, 255, 0.5);\n  font-size: 8px;\n  letter-spacing: 1px;\n}\n.chat-title .avatar[data-v-1e63fda1] {\n  position: absolute;\n  z-index: 1;\n  top: 8px;\n  left: 9px;\n  border-radius: 30px;\n  width: 30px;\n  height: 30px;\n  overflow: hidden;\n  margin: 0;\n  padding: 0;\n  border: 2px solid rgba(255, 255, 255, 0.24);\n}\n.chat-title .avatar img[data-v-1e63fda1] {\n  width: 100%;\n  height: auto;\n}\n\n/*--------------------\nMessage Box\n--------------------*/\n.message-box[data-v-1e63fda1] {\n  flex: 0 1 40px;\n  width: 100%;\n  padding: 10px;\n  position: relative;\n}\n.message-box textarea[data-v-1e63fda1]:focus:-webkit-placeholder {\n  color: transparent;\n}\n.message-box .message-submit[data-v-1e63fda1] {\n  z-index: 1;\n  top: 9px;\n  right: 10px;\n  transition: background 0.2s ease;\n  position: absolute;\n}\n.message-box .message-submit[data-v-1e63fda1]:hover {\n  background: #1d7745;\n}", ""]);
 
 // exports
 
@@ -9531,7 +9538,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".messages[data-v-6781ca1d] {\n  height: 100%;\n  overflow-y: scroll;\n  padding: 0 20px;\n}\n\n/*--------------------\nBody\n--------------------*/\n/*--------------------\nChat\n--------------------*/\n.chat[data-v-6781ca1d] {\n  height: calc(100vh - 55px);\n  max-height: 700px;\n  z-index: 2;\n  overflow: hidden;\n  background: white;\n  display: flex;\n  justify-content: space-between;\n  flex-direction: column;\n}\n\n/*--------------------\nChat Title\n--------------------*/\n.chat-title[data-v-6781ca1d] {\n  flex: 0 1 45px;\n  position: relative;\n  z-index: 2;\n  background: #fff;\n  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);\n  text-transform: uppercase;\n  text-align: left;\n  padding: 10px 10px 10px 20px;\n  margin-left: -15px;\n}\n.chat-title h1[data-v-6781ca1d],\n.chat-title h2[data-v-6781ca1d] {\n  font-weight: bold;\n  font-size: 16px;\n  margin: 0;\n  padding: 0;\n}\n.chat-title h2[data-v-6781ca1d] {\n  color: rgba(255, 255, 255, 0.5);\n  font-size: 8px;\n  letter-spacing: 1px;\n}\n.chat-title .avatar[data-v-6781ca1d] {\n  position: absolute;\n  z-index: 1;\n  top: 8px;\n  left: 9px;\n  border-radius: 30px;\n  width: 30px;\n  height: 30px;\n  overflow: hidden;\n  margin: 0;\n  padding: 0;\n  border: 2px solid rgba(255, 255, 255, 0.24);\n}\n.chat-title .avatar img[data-v-6781ca1d] {\n  width: 100%;\n  height: auto;\n}\n\n/*--------------------\nMessage Box\n--------------------*/\n.message-box[data-v-6781ca1d] {\n  flex: 0 1 40px;\n  width: 100%;\n  padding: 10px;\n  position: relative;\n}\n.message-box textarea[data-v-6781ca1d]:focus:-webkit-placeholder {\n  color: transparent;\n}\n.message-box .message-submit[data-v-6781ca1d] {\n  z-index: 1;\n  top: 9px;\n  right: 10px;\n  transition: background 0.2s ease;\n  position: absolute;\n}\n.message-box .message-submit[data-v-6781ca1d]:hover {\n  background: #1d7745;\n}", ""]);
+exports.push([module.i, ".messages[data-v-6781ca1d] {\n  height: 100%;\n  overflow-y: scroll;\n}\n.messages .messages-content[data-v-6781ca1d] {\n  display: flex;\n  flex-direction: column;\n}\n\n/*--------------------\nBody\n--------------------*/\n/*--------------------\nChat\n--------------------*/\n.chat[data-v-6781ca1d] {\n  height: calc(100vh - 55px);\n  max-height: 700px;\n  z-index: 2;\n  overflow: hidden;\n  background: white;\n  display: flex;\n  justify-content: space-between;\n  flex-direction: column;\n}\n\n/*--------------------\nChat Title\n--------------------*/\n.chat-title[data-v-6781ca1d] {\n  flex: 0 1 45px;\n  position: relative;\n  z-index: 2;\n  background: #fff;\n  text-transform: uppercase;\n  text-align: left;\n  padding: 20px;\n  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);\n  margin-left: -15px;\n}\n.chat-title h1[data-v-6781ca1d],\n.chat-title h2[data-v-6781ca1d] {\n  font-weight: bold;\n  font-size: 16px;\n  margin: 0;\n  padding: 0;\n}\n.chat-title h2[data-v-6781ca1d] {\n  color: rgba(255, 255, 255, 0.5);\n  font-size: 8px;\n  letter-spacing: 1px;\n}\n.chat-title .avatar[data-v-6781ca1d] {\n  position: absolute;\n  z-index: 1;\n  top: 8px;\n  left: 9px;\n  border-radius: 30px;\n  width: 30px;\n  height: 30px;\n  overflow: hidden;\n  margin: 0;\n  padding: 0;\n  border: 2px solid rgba(255, 255, 255, 0.24);\n}\n.chat-title .avatar img[data-v-6781ca1d] {\n  width: 100%;\n  height: auto;\n}\n\n/*--------------------\nMessage Box\n--------------------*/\n.message-box[data-v-6781ca1d] {\n  flex: 0 1 40px;\n  width: 100%;\n  padding: 10px;\n  position: relative;\n}\n.message-box textarea[data-v-6781ca1d]:focus:-webkit-placeholder {\n  color: transparent;\n}\n.message-box .message-submit[data-v-6781ca1d] {\n  z-index: 1;\n  top: 9px;\n  right: 10px;\n  transition: background 0.2s ease;\n  position: absolute;\n}\n.message-box .message-submit[data-v-6781ca1d]:hover {\n  background: #1d7745;\n}", ""]);
 
 // exports
 
@@ -9550,7 +9557,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".messages[data-v-37a4160f] {\n  height: 100%;\n  overflow-y: scroll;\n  padding: 0 20px;\n}\n\n/*--------------------\nBody\n--------------------*/\n/*--------------------\nChat\n--------------------*/\n.chat[data-v-37a4160f] {\n  height: calc(100vh - 55px);\n  max-height: 700px;\n  z-index: 2;\n  overflow: hidden;\n  background: white;\n  display: flex;\n  justify-content: space-between;\n  flex-direction: column;\n}\n\n/*--------------------\nChat Title\n--------------------*/\n.chat-title[data-v-37a4160f] {\n  flex: 0 1 45px;\n  position: relative;\n  z-index: 2;\n  background: #fff;\n  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);\n  text-transform: uppercase;\n  text-align: left;\n  padding: 10px 10px 10px 20px;\n  margin-left: -15px;\n}\n.chat-title h1[data-v-37a4160f],\n.chat-title h2[data-v-37a4160f] {\n  font-weight: bold;\n  font-size: 16px;\n  margin: 0;\n  padding: 0;\n}\n.chat-title h2[data-v-37a4160f] {\n  color: rgba(255, 255, 255, 0.5);\n  font-size: 8px;\n  letter-spacing: 1px;\n}\n.chat-title .avatar[data-v-37a4160f] {\n  position: absolute;\n  z-index: 1;\n  top: 8px;\n  left: 9px;\n  border-radius: 30px;\n  width: 30px;\n  height: 30px;\n  overflow: hidden;\n  margin: 0;\n  padding: 0;\n  border: 2px solid rgba(255, 255, 255, 0.24);\n}\n.chat-title .avatar img[data-v-37a4160f] {\n  width: 100%;\n  height: auto;\n}\n\n/*--------------------\nMessage Box\n--------------------*/\n.message-box[data-v-37a4160f] {\n  flex: 0 1 40px;\n  width: 100%;\n  padding: 10px;\n  position: relative;\n}\n.message-box textarea[data-v-37a4160f]:focus:-webkit-placeholder {\n  color: transparent;\n}\n.message-box .message-submit[data-v-37a4160f] {\n  z-index: 1;\n  top: 9px;\n  right: 10px;\n  transition: background 0.2s ease;\n  position: absolute;\n}\n.message-box .message-submit[data-v-37a4160f]:hover {\n  background: #1d7745;\n}", ""]);
+exports.push([module.i, ".messages[data-v-37a4160f] {\n  height: 100%;\n  overflow-y: scroll;\n}\n.messages .messages-content[data-v-37a4160f] {\n  display: flex;\n  flex-direction: column;\n}\n\n/*--------------------\nBody\n--------------------*/\n/*--------------------\nChat\n--------------------*/\n.chat[data-v-37a4160f] {\n  height: calc(100vh - 55px);\n  max-height: 700px;\n  z-index: 2;\n  overflow: hidden;\n  background: white;\n  display: flex;\n  justify-content: space-between;\n  flex-direction: column;\n}\n\n/*--------------------\nChat Title\n--------------------*/\n.chat-title[data-v-37a4160f] {\n  flex: 0 1 45px;\n  position: relative;\n  z-index: 2;\n  background: #fff;\n  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);\n  text-transform: uppercase;\n  text-align: left;\n  padding: 20px;\n  margin-left: -15px;\n}\n.chat-title h1[data-v-37a4160f],\n.chat-title h2[data-v-37a4160f] {\n  font-weight: bold;\n  font-size: 16px;\n  margin: 0;\n  padding: 0;\n}\n.chat-title h2[data-v-37a4160f] {\n  color: rgba(255, 255, 255, 0.5);\n  font-size: 8px;\n  letter-spacing: 1px;\n}\n.chat-title .avatar[data-v-37a4160f] {\n  position: absolute;\n  z-index: 1;\n  top: 8px;\n  left: 9px;\n  border-radius: 30px;\n  width: 30px;\n  height: 30px;\n  overflow: hidden;\n  margin: 0;\n  padding: 0;\n  border: 2px solid rgba(255, 255, 255, 0.24);\n}\n.chat-title .avatar img[data-v-37a4160f] {\n  width: 100%;\n  height: auto;\n}\n\n/*--------------------\nMessage Box\n--------------------*/\n.message-box[data-v-37a4160f] {\n  flex: 0 1 40px;\n  width: 100%;\n  padding: 10px;\n  position: relative;\n}\n.message-box textarea[data-v-37a4160f]:focus:-webkit-placeholder {\n  color: transparent;\n}\n.message-box .message-submit[data-v-37a4160f] {\n  z-index: 1;\n  top: 9px;\n  right: 10px;\n  transition: background 0.2s ease;\n  position: absolute;\n}\n.message-box .message-submit[data-v-37a4160f]:hover {\n  background: #1d7745;\n}", ""]);
 
 // exports
 
@@ -49197,23 +49204,31 @@ var render = function() {
     "div",
     {
       staticClass: "message",
-      class: {
-        "is-current-user": _vm.$root.currentUserLogin.id === _vm.message.user.id
-      }
+      class:
+        _vm.$root.currentUserLogin.id !== _vm.message.user.id
+          ? "reply-chat"
+          : "my-chat"
     },
     [
-      _c("div", { staticClass: "message-item user-name" }, [
-        _vm._v("\n\t\t" + _vm._s(_vm.message.user.name) + "\n\t")
+      _c("div", { staticClass: "img" }, [
+        _vm.$root.currentUserLogin.id !== _vm.message.user.id
+          ? _c("img", {
+              attrs: {
+                src:
+                  "/public/avatar/" +
+                  (_vm.message.user.avatar !== null
+                    ? _vm.message.user.avatar
+                    : "default.jpg")
+              }
+            })
+          : _vm._e()
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "message-item timestamp" }, [
-        _vm._v(
-          "\n\t\t| " + _vm._s(_vm.message.created_at.split(" ")[1]) + ":\n\t"
-        )
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "message-item text-message" }, [
-        _vm._v("\n\t\t" + _vm._s(_vm.message.message) + "\n\t")
+      _c("div", { staticClass: "content" }, [
+        _vm._v("\n    " + _vm._s(_vm.message.message) + "\n    "),
+        _c("div", { staticClass: "timestamp" }, [
+          _vm._v(_vm._s(_vm.message.created_at))
+        ])
       ])
     ]
   )
@@ -49296,7 +49311,7 @@ var render = function() {
               "div",
               {
                 staticClass: "user",
-                class: { active: _vm.activeIndex === null },
+                class: { active: _vm.activeIndex === 0 },
                 on: { click: _vm.roomChat }
               },
               [_vm._m(1)]
@@ -49305,10 +49320,10 @@ var render = function() {
             _vm._l(_vm.list_user, function(user, index) {
               return _c("ChatUserItem", {
                 key: index,
-                attrs: { user: user, isActive: _vm.activeIndex === index },
+                attrs: { user: user, isActive: _vm.activeIndex === index + 1 },
                 on: {
                   onToggle: function($event) {
-                    return _vm.onToggle(index)
+                    return _vm.onToggle(index + 1)
                   }
                 }
               })
@@ -49326,7 +49341,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "chat-title" }, [
-      _c("h1", [_vm._v("Users List")])
+      _c("h1", [_vm._v("CHAT")])
     ])
   },
   function() {
@@ -49338,7 +49353,7 @@ var staticRenderFns = [
         _c("img", { attrs: { src: "/public/icon/chatroom.jpg" } })
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "user-name" }, [
+      _c("div", { staticClass: "user-name hiddenwidth" }, [
         _vm._v("\n              ROOM CHAT\n              "),
         _c("div", { staticClass: "time" }, [_vm._v("All people")])
       ])
@@ -49367,7 +49382,6 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "chat" }, [
-    _vm._v("\n  PRIVATE\n  "),
     _vm._m(0),
     _vm._v(" "),
     _c("div", { staticClass: "messages scroll-height" }, [
@@ -49457,7 +49471,6 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "chat" }, [
-    _vm._v("\n    ROOM\n  "),
     _vm._m(0),
     _vm._v(" "),
     _c("div", { staticClass: "messages scroll-height" }, [
@@ -49521,7 +49534,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "chat-title" }, [
-      _c("h1", [_vm._v("Chatroom")])
+      _c("h1", [_vm._v("ROOM CHAT")])
     ])
   }
 ]
@@ -49569,7 +49582,7 @@ var render = function() {
           })
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "user-name" }, [
+        _c("div", { staticClass: "user-name hiddenwidth" }, [
           _vm._v("\n      " + _vm._s(_vm.user.name) + "\n      "),
           _c("div", { staticClass: "time" }, [
             _vm._v(_vm._s(_vm._f("moment")(_vm.user.updated_at, "from", "now")))

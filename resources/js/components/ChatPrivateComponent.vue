@@ -1,6 +1,5 @@
 <template>
   <div class="chat">
-    PRIVATE
     <div class="chat-title">
       <h1>Chatroom</h1>
     </div>
@@ -124,6 +123,9 @@ export default {
         });
     },
     sendMessage() {
+      if (this.message.length == 0) {
+        return;
+      }
       // Append message before send to server.
       var messageContent = this.message;
       this.message = "";
@@ -155,7 +157,10 @@ export default {
 .messages {
   height: 100%;
   overflow-y: scroll;
-  padding: 0 20px;
+  .messages-content {
+    display: flex;
+    flex-direction: column;
+  }
 }
 /*--------------------
 Body
@@ -182,10 +187,10 @@ Chat Title
   position: relative;
   z-index: 2;
   background: #fff;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
   text-transform: uppercase;
   text-align: left;
-  padding: 10px 10px 10px 20px;
+  padding: 20px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
   margin-left: -15px;
 
   h1,
