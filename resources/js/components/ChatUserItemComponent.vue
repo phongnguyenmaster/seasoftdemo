@@ -23,8 +23,10 @@ export default {
   },
   methods: {
     startChat(receiver_id) {
-      this.$emit("onToggle");
-      this.$parent.$parent.switchToPrivate(receiver_id);
+      if (receiver_id) {
+        this.$emit("onToggle");
+        this.$parent.$parent.switchToPrivate(receiver_id);
+      }
     },
   },
 };

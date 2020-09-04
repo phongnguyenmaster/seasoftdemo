@@ -1,12 +1,11 @@
 <template>
   <div class="row mainchat">
-    <div class="col-3">
+    <div class="col-chat col-user-list">
       <ChatListUser></ChatListUser>
     </div>
-    <div class="col-9">
+    <div id="div2" class="col-chat">
       <component :is="current" v-bind="currentProperties"></component>
     </div>
-
   </div>
 </template>
 
@@ -27,7 +26,22 @@ export default {
       receiver_id: 0,
     };
   },
-  mounted() {},
+  mounted() {
+    $(".col-user-list").resizable();
+    var totalWidth = $(window).width() - 1;
+    $(".col-user-list").resizable({
+      maxWidth: $(window).width() / 2,
+      handles: 'e, w',
+      resize: function (event, ui) {
+        var width = $(".col-user-list").width();
+        if (width > totalWidth) {
+          width = totalWidth;
+          $(".col-user-list").css("width", width);
+        }
+        $("#div2").css("width", totalWidth - width);
+      },
+    });
+  },
   created() {},
   updated: function () {},
   computed: {
@@ -51,11 +65,17 @@ export default {
 
 <style lang="scss" scoped>
 .mainchat {
-  .col-3,
+  .col-user-list {
+    width: 25%;
+  }
+  #div2 {
+    width: 75%;
+  }
+  .col-user-list,
   .col-9 {
     background-color: #fff;
   }
-  .col-3 {
+  .col-user-list {
     padding-right: 0px;
     padding-left: 0px;
     border-right: 1px solid #dedbdb;

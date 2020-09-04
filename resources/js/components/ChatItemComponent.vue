@@ -54,6 +54,7 @@ export default {
       font-size: 12px;
     }
   }
+
 }
 .reply-chat {
   .img {

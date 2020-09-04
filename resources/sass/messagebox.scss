@@ -11,6 +11,7 @@
     .messages-content {
         display: flex;
         flex-direction: column;
+        margin-bottom: 20px;
     }
     &.show {
         opacity: 1;
@@ -30,7 +31,6 @@ Chat
     overflow: hidden;
     background: white;
     display: flex;
-    justify-content: space-between;
     flex-direction: column;
 }
 /*--------------------

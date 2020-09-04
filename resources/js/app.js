@@ -6,6 +6,8 @@
 
 require('./bootstrap');
 
+import 'jquery-ui/ui/widgets/resizable.js';
+
 window.Vue = require('vue');
 Vue.use(require('vue-moment'));
 
