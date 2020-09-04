@@ -1,7 +1,7 @@
 <template>
   <div class="chat">
     <div class="chat-title">
-      <h1>ROOM CHAT</h1>
+      <ChatUserItem :user="userReceiverInfo"></ChatUserItem>
     </div>
     <div class="messages scroll-height">
       <div class="messages-content">
@@ -31,12 +31,14 @@
 <script>
 import ChatItem from "./ChatItemComponent.vue";
 import ChatListUser from "./ChatListUserComponent.vue";
+import ChatUserItem from "./ChatUserItemComponent.vue";
 var socket = io.connect("http://192.168.134.1:3000");
 //var socketPrivate = io.connect("http://192.168.134.1:3000/privatechat");
 
 export default {
   components: {
     ChatItem,
+    ChatUserItem,
   },
   data() {
     return {
@@ -46,6 +48,7 @@ export default {
       isLoadHistory: false,
       lastIdHistory: 0,
       list_messages: [],
+      userReceiverInfo: { avatar: "chatroom.jpg", name: "ROOM CHAT" },
     };
   },
   mounted() {
@@ -121,99 +124,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-.messages {
-  height: 100%;
-  overflow-y: scroll;
-  .messages-content {
-    display: flex;
-    flex-direction: column;
-  }
-}
-/*--------------------
-Body
---------------------*/
-/*--------------------
-Chat
---------------------*/
-
-.chat {
-  height: calc(100vh - 55px);
-  max-height: 700px;
-  z-index: 2;
-  overflow: hidden;
-  background: white;
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
-}
-/*--------------------
-Chat Title
---------------------*/
-.chat-title {
-  flex: 0 1 45px;
-  position: relative;
-  z-index: 2;
-  background: #fff;
-  text-transform: uppercase;
-  text-align: left;
-  padding: 20px;
-  margin-left: -15px;
-  border-bottom: 1px solid #dedbdb;
-  h1,
-  h2 {
-    font-weight: bold;
-    font-size: 16px;
-    margin: 0;
-    padding: 0;
-  }
-  h2 {
-    color: rgba(255, 255, 255, 0.5);
-    font-size: 8px;
-    letter-spacing: 1px;
-  }
-  .avatar {
-    position: absolute;
-    z-index: 1;
-    top: 8px;
-    left: 9px;
-    border-radius: 30px;
-    width: 30px;
-    height: 30px;
-    overflow: hidden;
-    margin: 0;
-    padding: 0;
-    border: 2px solid rgba(255, 255, 255, 0.24);
-    img {
-      width: 100%;
-      height: auto;
-    }
-  }
-}
-/*--------------------
-Message Box
---------------------*/
-.message-box {
-  flex: 0 1 40px;
-  width: 100%;
-  padding: 10px;
-  position: relative;
-
-  & textarea:focus:-webkit-placeholder {
-    color: transparent;
-  }
-
-  & .message-submit {
-    z-index: 1;
-    top: 9px;
-    right: 10px;
-    transition: background 0.2s ease;
-    position: absolute;
-    &:hover {
-      background: #1d7745;
-    }
-  }
-}
-</style>
-

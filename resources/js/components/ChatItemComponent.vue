@@ -44,14 +44,15 @@ export default {
     margin-bottom: 2px;
     border-radius: 0px 8px 8px 8px;
     word-break: break-word;
-  }
-  .name {
-    font-weight: bold;
-  }
-  .timestamp,
-  .name {
-    opacity: 0.6;
-    font-size: 12px;
+    .messagecontent {
+      font-size: 15px;
+      color: #222222;
+    }
+    .timestamp,
+    .name {
+      color: rgb(182 182 182);
+      font-size: 12px;
+    }
   }
 }
 .reply-chat {
@@ -67,17 +68,18 @@ export default {
     }
   }
   .content {
-    background-color: #f1f0f0;
-    color: #4b4f56;
+    background-color: white;
     float: left;
     margin-left: 45px;
   }
 }
 .my-chat {
   .content {
-    background-color: #4080ff;
-    color: white;
+    background-color: #dae9ff;
     float: right;
+    .timestamp {
+      color: rgba(0, 0, 0, 0.5);
+    }
   }
 }
 </style>

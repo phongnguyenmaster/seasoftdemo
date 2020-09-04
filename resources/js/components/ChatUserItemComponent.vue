@@ -17,13 +17,9 @@ export default {
   props: {
     user: {
       type: Object,
-      default: {},
+      default: () => ({}),
     },
     isActive: false,
-  },
-  data() {
-    return {
-    };
   },
   methods: {
     startChat(receiver_id) {

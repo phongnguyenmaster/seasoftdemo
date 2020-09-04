@@ -21,7 +21,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 // Load info user login
 Route::resource('user', 'UserController');
-
+Route::post('getUserInfo', 'UserController@getUserInfo');
 Route::get('/getUserLogin', function () {
     return Auth::user();
 })->middleware('auth');

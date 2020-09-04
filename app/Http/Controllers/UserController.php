@@ -139,4 +139,42 @@ class UserController extends Controller
 
         return redirect('/user')->with('success', 'User deleted!');
     }
+    public function getUserInfo(Request $request)
+    {
+        $dataResult = array('status' => 1, 'message' => '');
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|numeric',
+        ]);
+        if ($validator->fails()) {
+            $dataResult['status'] = 0;
+            $dataResult['message'] = __('validation.invalid_data');
+            return $dataResult;
+        }
+        $id =  $request->get('id');
+        $user = $this->getUserInfoById($id);
+        if (!$user) {
+            $dataResult['status'] = 0;
+            $dataResult['message'] = __('not_exist', ['attribute' => __('object.user')]);
+            return $dataResult;
+        }
+        return $user;
+    }
+    private function checkIfUserExist($email)
+    {
+        $user = User::where('email', $email)->first();
+        if ($user) {
+            return $user;
+        } else {
+            return false;
+        }
+    }
+    private function getUserInfoById($id)
+    {
+        $user = User::where('id', $id)->first();
+        if ($user) {
+            return $user;
+        } else {
+            return false;
+        }
+    }
 }

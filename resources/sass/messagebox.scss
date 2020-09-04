@@ -1,0 +1,88 @@
+.messages {
+    height: 100%;
+    overflow-y: scroll;
+    height: 100%;
+    overflow-y: scroll;
+    background-image: url(/public/images/bgchat.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    .messages-content {
+        display: flex;
+        flex-direction: column;
+    }
+}
+/*--------------------
+Body
+--------------------*/
+/*--------------------
+Chat
+--------------------*/
+
+.chat {
+    height: calc(100vh - 55px);
+    max-height: 700px;
+    z-index: 2;
+    overflow: hidden;
+    background: white;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+}
+/*--------------------
+Chat Title
+--------------------*/
+.chat-title {
+    flex: 0 1 45px;
+    position: relative;
+    z-index: 2;
+    background: #fff;
+    text-transform: uppercase;
+    text-align: left;
+    border-bottom: 1px solid #dedbdb;
+    h1 {
+        padding: 22px 20px 23px 20px;
+        font-weight: bold;
+        font-size: 16px;
+        margin: 0;
+    }
+    .avatar {
+        position: absolute;
+        z-index: 1;
+        top: 8px;
+        left: 9px;
+        border-radius: 30px;
+        width: 30px;
+        height: 30px;
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+        border: 2px solid rgba(255, 255, 255, 0.24);
+        img {
+            width: 100%;
+            height: auto;
+        }
+    }
+}
+/*--------------------
+Message Box
+--------------------*/
+.message-box {
+    flex: 0 1 40px;
+    width: 100%;
+    height: 60px;
+    position: relative;
+    input{
+        height: 60px;
+    }
+
+    & .message-submit {
+        z-index: 1;
+        top: 9px;
+        right: 10px;
+        transition: background 0.2s ease;
+        position: absolute;
+        &:hover {
+            background: #1d7745;
+        }
+    }
+}

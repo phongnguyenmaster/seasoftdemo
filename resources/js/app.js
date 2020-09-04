@@ -42,9 +42,15 @@ const app = new Vue({
     methods: {
         getCurrentUserLogin() {
             axios.get('/getUserLogin')
-            .then(response => {
-                this.currentUserLogin = response.data
-            })
+                .then(response => {
+                    this.currentUserLogin = response.data
+                })
+        },
+        getUserInfo(id, callback) {
+            axios.post('/getUserInfo',{'id' : id})
+                .then(response => {
+                    callback(response.data);
+                })
         }
     }
 });

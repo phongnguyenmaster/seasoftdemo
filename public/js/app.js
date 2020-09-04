@@ -2149,10 +2149,9 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     var container = this.$el.querySelector(".userlist");
     $(container).scroll(function (e) {
-      var pos = $(e.target).scrollTop();
+      var pos = $(e.target).scrollTop() + $(e.target).height();
 
       if (pos >= container.scrollHeight) {
-        this.currentHeight = container.scrollHeight;
         this.loadMessage(this.page);
       }
     }.bind(this));
@@ -2166,7 +2165,6 @@ __webpack_require__.r(__webpack_exports__);
     if (!this.isLoadHistory) {
       container.scrollTop = 0;
     } else {
-      //container.scrollTop = $(container).children(0).height() - this.currentHeight;
       this.isLoadHistory = false;
     }
   },
@@ -2176,11 +2174,13 @@ __webpack_require__.r(__webpack_exports__);
 
       this.isLoadHistory = true;
       axios.get("/loadlistuser/" + this.page).then(function (response) {
-        response.data.forEach(function (i) {
-          return _this.list_user.push(i);
-        });
-        _this.page++;
-        _this.lastIdHistory = response.data[response.data.length - 1]["id"];
+        if (response.data.length > 0) {
+          response.data.forEach(function (i) {
+            return _this.list_user.push(i);
+          });
+          _this.page++;
+          _this.lastIdHistory = response.data[response.data.length - 1]["id"];
+        }
       })["catch"](function (error) {
         console.log(error);
       });
@@ -2207,7 +2207,7 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ChatItemComponent_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ChatItemComponent.vue */ "./resources/js/components/ChatItemComponent.vue");
-/* harmony import */ var _ChatListUserComponent_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ChatListUserComponent.vue */ "./resources/js/components/ChatListUserComponent.vue");
+/* harmony import */ var _ChatUserItemComponent_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ChatUserItemComponent.vue */ "./resources/js/components/ChatUserItemComponent.vue");
 //
 //
 //
@@ -2245,7 +2245,8 @@ __webpack_require__.r(__webpack_exports__);
 var socket = io.connect("http://192.168.134.1:3000/privatechat");
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
-    ChatItem: _ChatItemComponent_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
+    ChatItem: _ChatItemComponent_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
+    ChatUserItem: _ChatUserItemComponent_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
   props: {
     receiver_id: 0
@@ -2258,7 +2259,10 @@ var socket = io.connect("http://192.168.134.1:3000/privatechat");
       isLoadHistory: false,
       lastIdHistory: 0,
       list_messages: [],
-      privateKey: 0
+      privateKey: 0,
+      userReceiverInfo: {
+        avatar: "default.jpg"
+      }
     };
   },
   mounted: function mounted() {
@@ -2305,6 +2309,9 @@ var socket = io.connect("http://192.168.134.1:3000/privatechat");
       this.loadPrivateKey();
       this.list_messages = [];
       this.lastIdHistory = 0;
+      this.$root.getUserInfo(this.receiver_id, function (data) {
+        this.userReceiverInfo = data;
+      }.bind(this));
     },
     loadPrivateKey: function loadPrivateKey() {
       var _this2 = this;
@@ -2386,6 +2393,7 @@ var socket = io.connect("http://192.168.134.1:3000/privatechat");
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ChatItemComponent_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ChatItemComponent.vue */ "./resources/js/components/ChatItemComponent.vue");
 /* harmony import */ var _ChatListUserComponent_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ChatListUserComponent.vue */ "./resources/js/components/ChatListUserComponent.vue");
+/* harmony import */ var _ChatUserItemComponent_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ChatUserItemComponent.vue */ "./resources/js/components/ChatUserItemComponent.vue");
 //
 //
 //
@@ -2416,13 +2424,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 
 
 var socket = io.connect("http://192.168.134.1:3000"); //var socketPrivate = io.connect("http://192.168.134.1:3000/privatechat");
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
-    ChatItem: _ChatItemComponent_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
+    ChatItem: _ChatItemComponent_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
+    ChatUserItem: _ChatUserItemComponent_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
   },
   data: function data() {
     return {
@@ -2431,7 +2441,11 @@ var socket = io.connect("http://192.168.134.1:3000"); //var socketPrivate = io.c
       currentHeight: 0,
       isLoadHistory: false,
       lastIdHistory: 0,
-      list_messages: []
+      list_messages: [],
+      userReceiverInfo: {
+        avatar: "chatroom.jpg",
+        name: "ROOM CHAT"
+      }
     };
   },
   mounted: function mounted() {
@@ -2537,12 +2551,11 @@ __webpack_require__.r(__webpack_exports__);
   props: {
     user: {
       type: Object,
-      "default": {}
+      "default": function _default() {
+        return {};
+      }
     },
     isActive: false
-  },
-  data: function data() {
-    return {};
   },
   methods: {
     startChat: function startChat(receiver_id) {
@@ -9507,7 +9520,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".message[data-v-46f276d7] {\n  position: relative;\n}\n.message .content[data-v-46f276d7] {\n  padding: 5px 8px 6px;\n  margin-top: 2px;\n  margin-bottom: 2px;\n  border-radius: 0px 8px 8px 8px;\n  word-break: break-word;\n}\n.message .name[data-v-46f276d7] {\n  font-weight: bold;\n}\n.message .timestamp[data-v-46f276d7],\n.message .name[data-v-46f276d7] {\n  opacity: 0.6;\n  font-size: 12px;\n}\n.reply-chat .img[data-v-46f276d7] {\n  position: absolute;\n}\n.reply-chat .img img[data-v-46f276d7] {\n  width: 40px;\n  height: 40px;\n  border-radius: 100%;\n  float: left;\n  border: 1px solid #f1f0f0;\n  margin: 1px;\n}\n.reply-chat .content[data-v-46f276d7] {\n  background-color: #f1f0f0;\n  color: #4b4f56;\n  float: left;\n  margin-left: 45px;\n}\n.my-chat .content[data-v-46f276d7] {\n  background-color: #4080ff;\n  color: white;\n  float: right;\n}", ""]);
+exports.push([module.i, ".message[data-v-46f276d7] {\n  position: relative;\n}\n.message .content[data-v-46f276d7] {\n  padding: 5px 8px 6px;\n  margin-top: 2px;\n  margin-bottom: 2px;\n  border-radius: 0px 8px 8px 8px;\n  word-break: break-word;\n}\n.message .content .messagecontent[data-v-46f276d7] {\n  font-size: 15px;\n  color: #222222;\n}\n.message .content .timestamp[data-v-46f276d7],\n.message .content .name[data-v-46f276d7] {\n  color: #b6b6b6;\n  font-size: 12px;\n}\n.reply-chat .img[data-v-46f276d7] {\n  position: absolute;\n}\n.reply-chat .img img[data-v-46f276d7] {\n  width: 40px;\n  height: 40px;\n  border-radius: 100%;\n  float: left;\n  border: 1px solid #f1f0f0;\n  margin: 1px;\n}\n.reply-chat .content[data-v-46f276d7] {\n  background-color: white;\n  float: left;\n  margin-left: 45px;\n}\n.my-chat .content[data-v-46f276d7] {\n  background-color: #dae9ff;\n  float: right;\n}\n.my-chat .content .timestamp[data-v-46f276d7] {\n  color: rgba(0, 0, 0, 0.5);\n}", ""]);
 
 // exports
 
@@ -9545,45 +9558,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".messages[data-v-1e63fda1] {\n  height: 100%;\n  overflow-y: scroll;\n  padding: 0 20px;\n}\n\n/*--------------------\nBody\n--------------------*/\n/*--------------------\nChat\n--------------------*/\n.chat[data-v-1e63fda1] {\n  height: calc(100vh - 55px);\n  max-height: 700px;\n  z-index: 2;\n  overflow: hidden;\n  background: white;\n  display: flex;\n  flex-direction: column;\n}\n\n/*--------------------\nChat Title\n--------------------*/\n.userlist[data-v-1e63fda1] {\n  margin-top: 8px;\n  margin-left: 4px;\n  margin-right: 4px;\n}\n.chat-title[data-v-1e63fda1] {\n  flex: 0 1 45px;\n  position: relative;\n  z-index: 2;\n  background: #fff;\n  text-transform: uppercase;\n  text-align: left;\n  padding: 20px;\n  border-bottom: 1px solid #dedbdb;\n}\n.chat-title h1[data-v-1e63fda1],\n.chat-title h2[data-v-1e63fda1] {\n  font-weight: bold;\n  font-size: 16px;\n  margin: 0;\n  padding: 0;\n}\n.chat-title h2[data-v-1e63fda1] {\n  color: rgba(255, 255, 255, 0.5);\n  font-size: 8px;\n  letter-spacing: 1px;\n}\n.chat-title .avatar[data-v-1e63fda1] {\n  position: absolute;\n  z-index: 1;\n  top: 8px;\n  left: 9px;\n  border-radius: 30px;\n  width: 30px;\n  height: 30px;\n  overflow: hidden;\n  margin: 0;\n  padding: 0;\n  border: 2px solid rgba(255, 255, 255, 0.24);\n}\n.chat-title .avatar img[data-v-1e63fda1] {\n  width: 100%;\n  height: auto;\n}\n\n/*--------------------\nMessage Box\n--------------------*/\n.message-box[data-v-1e63fda1] {\n  flex: 0 1 40px;\n  width: 100%;\n  padding: 10px;\n  position: relative;\n}\n.message-box textarea[data-v-1e63fda1]:focus:-webkit-placeholder {\n  color: transparent;\n}\n.message-box .message-submit[data-v-1e63fda1] {\n  z-index: 1;\n  top: 9px;\n  right: 10px;\n  transition: background 0.2s ease;\n  position: absolute;\n}\n.message-box .message-submit[data-v-1e63fda1]:hover {\n  background: #1d7745;\n}", ""]);
-
-// exports
-
-
-/***/ }),
-
-/***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ChatPrivateComponent.vue?vue&type=style&index=0&id=6781ca1d&lang=scss&scoped=true&":
-/*!******************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--7-2!./node_modules/sass-loader/dist/cjs.js??ref--7-3!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ChatPrivateComponent.vue?vue&type=style&index=0&id=6781ca1d&lang=scss&scoped=true& ***!
-  \******************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
-// imports
-
-
-// module
-exports.push([module.i, ".messages[data-v-6781ca1d] {\n  height: 100%;\n  overflow-y: scroll;\n}\n.messages .messages-content[data-v-6781ca1d] {\n  display: flex;\n  flex-direction: column;\n}\n\n/*--------------------\nBody\n--------------------*/\n/*--------------------\nChat\n--------------------*/\n.chat[data-v-6781ca1d] {\n  height: calc(100vh - 55px);\n  max-height: 700px;\n  z-index: 2;\n  overflow: hidden;\n  background: white;\n  display: flex;\n  justify-content: space-between;\n  flex-direction: column;\n}\n\n/*--------------------\nChat Title\n--------------------*/\n.chat-title[data-v-6781ca1d] {\n  flex: 0 1 45px;\n  position: relative;\n  z-index: 2;\n  background: #fff;\n  text-transform: uppercase;\n  text-align: left;\n  padding: 20px;\n  margin-left: -15px;\n  border-bottom: 1px solid #dedbdb;\n}\n.chat-title h1[data-v-6781ca1d],\n.chat-title h2[data-v-6781ca1d] {\n  font-weight: bold;\n  font-size: 16px;\n  margin: 0;\n  padding: 0;\n}\n.chat-title h2[data-v-6781ca1d] {\n  color: rgba(255, 255, 255, 0.5);\n  font-size: 8px;\n  letter-spacing: 1px;\n}\n.chat-title .avatar[data-v-6781ca1d] {\n  position: absolute;\n  z-index: 1;\n  top: 8px;\n  left: 9px;\n  border-radius: 30px;\n  width: 30px;\n  height: 30px;\n  overflow: hidden;\n  margin: 0;\n  padding: 0;\n  border: 2px solid rgba(255, 255, 255, 0.24);\n}\n.chat-title .avatar img[data-v-6781ca1d] {\n  width: 100%;\n  height: auto;\n}\n\n/*--------------------\nMessage Box\n--------------------*/\n.message-box[data-v-6781ca1d] {\n  flex: 0 1 40px;\n  width: 100%;\n  padding: 10px;\n  position: relative;\n}\n.message-box textarea[data-v-6781ca1d]:focus:-webkit-placeholder {\n  color: transparent;\n}\n.message-box .message-submit[data-v-6781ca1d] {\n  z-index: 1;\n  top: 9px;\n  right: 10px;\n  transition: background 0.2s ease;\n  position: absolute;\n}\n.message-box .message-submit[data-v-6781ca1d]:hover {\n  background: #1d7745;\n}", ""]);
-
-// exports
-
-
-/***/ }),
-
-/***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ChatRoomComponent.vue?vue&type=style&index=0&id=37a4160f&lang=scss&scoped=true&":
-/*!***************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/css-loader!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--7-2!./node_modules/sass-loader/dist/cjs.js??ref--7-3!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ChatRoomComponent.vue?vue&type=style&index=0&id=37a4160f&lang=scss&scoped=true& ***!
-  \***************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
-// imports
-
-
-// module
-exports.push([module.i, ".messages[data-v-37a4160f] {\n  height: 100%;\n  overflow-y: scroll;\n}\n.messages .messages-content[data-v-37a4160f] {\n  display: flex;\n  flex-direction: column;\n}\n\n/*--------------------\nBody\n--------------------*/\n/*--------------------\nChat\n--------------------*/\n.chat[data-v-37a4160f] {\n  height: calc(100vh - 55px);\n  max-height: 700px;\n  z-index: 2;\n  overflow: hidden;\n  background: white;\n  display: flex;\n  justify-content: space-between;\n  flex-direction: column;\n}\n\n/*--------------------\nChat Title\n--------------------*/\n.chat-title[data-v-37a4160f] {\n  flex: 0 1 45px;\n  position: relative;\n  z-index: 2;\n  background: #fff;\n  text-transform: uppercase;\n  text-align: left;\n  padding: 20px;\n  margin-left: -15px;\n  border-bottom: 1px solid #dedbdb;\n}\n.chat-title h1[data-v-37a4160f],\n.chat-title h2[data-v-37a4160f] {\n  font-weight: bold;\n  font-size: 16px;\n  margin: 0;\n  padding: 0;\n}\n.chat-title h2[data-v-37a4160f] {\n  color: rgba(255, 255, 255, 0.5);\n  font-size: 8px;\n  letter-spacing: 1px;\n}\n.chat-title .avatar[data-v-37a4160f] {\n  position: absolute;\n  z-index: 1;\n  top: 8px;\n  left: 9px;\n  border-radius: 30px;\n  width: 30px;\n  height: 30px;\n  overflow: hidden;\n  margin: 0;\n  padding: 0;\n  border: 2px solid rgba(255, 255, 255, 0.24);\n}\n.chat-title .avatar img[data-v-37a4160f] {\n  width: 100%;\n  height: auto;\n}\n\n/*--------------------\nMessage Box\n--------------------*/\n.message-box[data-v-37a4160f] {\n  flex: 0 1 40px;\n  width: 100%;\n  padding: 10px;\n  position: relative;\n}\n.message-box textarea[data-v-37a4160f]:focus:-webkit-placeholder {\n  color: transparent;\n}\n.message-box .message-submit[data-v-37a4160f] {\n  z-index: 1;\n  top: 9px;\n  right: 10px;\n  transition: background 0.2s ease;\n  position: absolute;\n}\n.message-box .message-submit[data-v-37a4160f]:hover {\n  background: #1d7745;\n}", ""]);
+exports.push([module.i, ".userlist[data-v-1e63fda1] {\n  margin-top: 8px;\n  margin-left: 4px;\n  margin-right: 4px;\n}\n.avatar[data-v-1e63fda1] {\n  position: absolute;\n  z-index: 1;\n  top: 8px;\n  left: 9px;\n  border-radius: 30px;\n  width: 30px;\n  height: 30px;\n  overflow: hidden;\n  margin: 0;\n  padding: 0;\n  border: 2px solid rgba(255, 255, 255, 0.24);\n}\n.avatar img[data-v-1e63fda1] {\n  width: 100%;\n  height: auto;\n}", ""]);
 
 // exports
 
@@ -48513,66 +48488,6 @@ if(false) {}
 
 /***/ }),
 
-/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ChatPrivateComponent.vue?vue&type=style&index=0&id=6781ca1d&lang=scss&scoped=true&":
-/*!**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/style-loader!./node_modules/css-loader!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--7-2!./node_modules/sass-loader/dist/cjs.js??ref--7-3!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ChatPrivateComponent.vue?vue&type=style&index=0&id=6781ca1d&lang=scss&scoped=true& ***!
-  \**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-
-var content = __webpack_require__(/*! !../../../node_modules/css-loader!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--7-2!../../../node_modules/sass-loader/dist/cjs.js??ref--7-3!../../../node_modules/vue-loader/lib??vue-loader-options!./ChatPrivateComponent.vue?vue&type=style&index=0&id=6781ca1d&lang=scss&scoped=true& */ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ChatPrivateComponent.vue?vue&type=style&index=0&id=6781ca1d&lang=scss&scoped=true&");
-
-if(typeof content === 'string') content = [[module.i, content, '']];
-
-var transform;
-var insertInto;
-
-
-
-var options = {"hmr":true}
-
-options.transform = transform
-options.insertInto = undefined;
-
-var update = __webpack_require__(/*! ../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
-
-if(content.locals) module.exports = content.locals;
-
-if(false) {}
-
-/***/ }),
-
-/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ChatRoomComponent.vue?vue&type=style&index=0&id=37a4160f&lang=scss&scoped=true&":
-/*!*******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/style-loader!./node_modules/css-loader!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--7-2!./node_modules/sass-loader/dist/cjs.js??ref--7-3!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ChatRoomComponent.vue?vue&type=style&index=0&id=37a4160f&lang=scss&scoped=true& ***!
-  \*******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-
-var content = __webpack_require__(/*! !../../../node_modules/css-loader!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--7-2!../../../node_modules/sass-loader/dist/cjs.js??ref--7-3!../../../node_modules/vue-loader/lib??vue-loader-options!./ChatRoomComponent.vue?vue&type=style&index=0&id=37a4160f&lang=scss&scoped=true& */ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ChatRoomComponent.vue?vue&type=style&index=0&id=37a4160f&lang=scss&scoped=true&");
-
-if(typeof content === 'string') content = [[module.i, content, '']];
-
-var transform;
-var insertInto;
-
-
-
-var options = {"hmr":true}
-
-options.transform = transform
-options.insertInto = undefined;
-
-var update = __webpack_require__(/*! ../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
-
-if(content.locals) module.exports = content.locals;
-
-if(false) {}
-
-/***/ }),
-
 /***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ChatUserItemComponent.vue?vue&type=style&index=0&id=f82f3068&lang=scss&scoped=true&":
 /*!***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/style-loader!./node_modules/css-loader!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--7-2!./node_modules/sass-loader/dist/cjs.js??ref--7-3!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ChatUserItemComponent.vue?vue&type=style&index=0&id=f82f3068&lang=scss&scoped=true& ***!
@@ -49406,10 +49321,10 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ChatPrivateComponent.vue?vue&type=template&id=6781ca1d&scoped=true&":
-/*!***********************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ChatPrivateComponent.vue?vue&type=template&id=6781ca1d&scoped=true& ***!
-  \***********************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ChatPrivateComponent.vue?vue&type=template&id=6781ca1d&":
+/*!***********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ChatPrivateComponent.vue?vue&type=template&id=6781ca1d& ***!
+  \***********************************************************************************************************************************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -49422,7 +49337,12 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "chat" }, [
-    _vm._m(0),
+    _c(
+      "div",
+      { staticClass: "chat-title" },
+      [_c("ChatUserItem", { attrs: { user: _vm.userReceiverInfo } })],
+      1
+    ),
     _vm._v(" "),
     _c("div", { staticClass: "messages scroll-height" }, [
       _c(
@@ -49486,26 +49406,17 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "chat-title" }, [
-      _c("h1", [_vm._v("PRIVATE CHAT")])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ChatRoomComponent.vue?vue&type=template&id=37a4160f&scoped=true&":
-/*!********************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ChatRoomComponent.vue?vue&type=template&id=37a4160f&scoped=true& ***!
-  \********************************************************************************************************************************************************************************************************************************/
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ChatRoomComponent.vue?vue&type=template&id=37a4160f&":
+/*!********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ChatRoomComponent.vue?vue&type=template&id=37a4160f& ***!
+  \********************************************************************************************************************************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -49518,7 +49429,12 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "chat" }, [
-    _vm._m(0),
+    _c(
+      "div",
+      { staticClass: "chat-title" },
+      [_c("ChatUserItem", { attrs: { user: _vm.userReceiverInfo } })],
+      1
+    ),
     _vm._v(" "),
     _c("div", { staticClass: "messages scroll-height" }, [
       _c(
@@ -49571,16 +49487,7 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "chat-title" }, [
-      _c("h1", [_vm._v("ROOM CHAT")])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -66788,6 +66695,13 @@ var app = new Vue({
       axios.get('/getUserLogin').then(function (response) {
         _this.currentUserLogin = response.data;
       });
+    },
+    getUserInfo: function getUserInfo(id, callback) {
+      axios.post('/getUserInfo', {
+        'id': id
+      }).then(function (response) {
+        callback(response.data);
+      });
     }
   }
 });
@@ -67109,11 +67023,9 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _ChatPrivateComponent_vue_vue_type_template_id_6781ca1d_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ChatPrivateComponent.vue?vue&type=template&id=6781ca1d&scoped=true& */ "./resources/js/components/ChatPrivateComponent.vue?vue&type=template&id=6781ca1d&scoped=true&");
+/* harmony import */ var _ChatPrivateComponent_vue_vue_type_template_id_6781ca1d___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ChatPrivateComponent.vue?vue&type=template&id=6781ca1d& */ "./resources/js/components/ChatPrivateComponent.vue?vue&type=template&id=6781ca1d&");
 /* harmony import */ var _ChatPrivateComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ChatPrivateComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/ChatPrivateComponent.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _ChatPrivateComponent_vue_vue_type_style_index_0_id_6781ca1d_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ChatPrivateComponent.vue?vue&type=style&index=0&id=6781ca1d&lang=scss&scoped=true& */ "./resources/js/components/ChatPrivateComponent.vue?vue&type=style&index=0&id=6781ca1d&lang=scss&scoped=true&");
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
-
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -67121,13 +67033,13 @@ __webpack_require__.r(__webpack_exports__);
 
 /* normalize component */
 
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
   _ChatPrivateComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _ChatPrivateComponent_vue_vue_type_template_id_6781ca1d_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _ChatPrivateComponent_vue_vue_type_template_id_6781ca1d_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  _ChatPrivateComponent_vue_vue_type_template_id_6781ca1d___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ChatPrivateComponent_vue_vue_type_template_id_6781ca1d___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
   null,
-  "6781ca1d",
+  null,
   null
   
 )
@@ -67153,35 +67065,19 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/components/ChatPrivateComponent.vue?vue&type=style&index=0&id=6781ca1d&lang=scss&scoped=true&":
-/*!********************************************************************************************************************!*\
-  !*** ./resources/js/components/ChatPrivateComponent.vue?vue&type=style&index=0&id=6781ca1d&lang=scss&scoped=true& ***!
-  \********************************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_dist_cjs_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_ChatPrivateComponent_vue_vue_type_style_index_0_id_6781ca1d_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader!../../../node_modules/css-loader!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--7-2!../../../node_modules/sass-loader/dist/cjs.js??ref--7-3!../../../node_modules/vue-loader/lib??vue-loader-options!./ChatPrivateComponent.vue?vue&type=style&index=0&id=6781ca1d&lang=scss&scoped=true& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ChatPrivateComponent.vue?vue&type=style&index=0&id=6781ca1d&lang=scss&scoped=true&");
-/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_dist_cjs_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_ChatPrivateComponent_vue_vue_type_style_index_0_id_6781ca1d_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_dist_cjs_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_ChatPrivateComponent_vue_vue_type_style_index_0_id_6781ca1d_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__);
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_dist_cjs_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_ChatPrivateComponent_vue_vue_type_style_index_0_id_6781ca1d_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_dist_cjs_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_ChatPrivateComponent_vue_vue_type_style_index_0_id_6781ca1d_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
- /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_dist_cjs_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_ChatPrivateComponent_vue_vue_type_style_index_0_id_6781ca1d_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0___default.a); 
-
-/***/ }),
-
-/***/ "./resources/js/components/ChatPrivateComponent.vue?vue&type=template&id=6781ca1d&scoped=true&":
-/*!*****************************************************************************************************!*\
-  !*** ./resources/js/components/ChatPrivateComponent.vue?vue&type=template&id=6781ca1d&scoped=true& ***!
-  \*****************************************************************************************************/
+/***/ "./resources/js/components/ChatPrivateComponent.vue?vue&type=template&id=6781ca1d&":
+/*!*****************************************************************************************!*\
+  !*** ./resources/js/components/ChatPrivateComponent.vue?vue&type=template&id=6781ca1d& ***!
+  \*****************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ChatPrivateComponent_vue_vue_type_template_id_6781ca1d_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./ChatPrivateComponent.vue?vue&type=template&id=6781ca1d&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ChatPrivateComponent.vue?vue&type=template&id=6781ca1d&scoped=true&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ChatPrivateComponent_vue_vue_type_template_id_6781ca1d_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ChatPrivateComponent_vue_vue_type_template_id_6781ca1d___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./ChatPrivateComponent.vue?vue&type=template&id=6781ca1d& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ChatPrivateComponent.vue?vue&type=template&id=6781ca1d&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ChatPrivateComponent_vue_vue_type_template_id_6781ca1d___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ChatPrivateComponent_vue_vue_type_template_id_6781ca1d_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ChatPrivateComponent_vue_vue_type_template_id_6781ca1d___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
@@ -67196,11 +67092,9 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _ChatRoomComponent_vue_vue_type_template_id_37a4160f_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ChatRoomComponent.vue?vue&type=template&id=37a4160f&scoped=true& */ "./resources/js/components/ChatRoomComponent.vue?vue&type=template&id=37a4160f&scoped=true&");
+/* harmony import */ var _ChatRoomComponent_vue_vue_type_template_id_37a4160f___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ChatRoomComponent.vue?vue&type=template&id=37a4160f& */ "./resources/js/components/ChatRoomComponent.vue?vue&type=template&id=37a4160f&");
 /* harmony import */ var _ChatRoomComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ChatRoomComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/ChatRoomComponent.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _ChatRoomComponent_vue_vue_type_style_index_0_id_37a4160f_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ChatRoomComponent.vue?vue&type=style&index=0&id=37a4160f&lang=scss&scoped=true& */ "./resources/js/components/ChatRoomComponent.vue?vue&type=style&index=0&id=37a4160f&lang=scss&scoped=true&");
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
-
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -67208,13 +67102,13 @@ __webpack_require__.r(__webpack_exports__);
 
 /* normalize component */
 
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
   _ChatRoomComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _ChatRoomComponent_vue_vue_type_template_id_37a4160f_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _ChatRoomComponent_vue_vue_type_template_id_37a4160f_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  _ChatRoomComponent_vue_vue_type_template_id_37a4160f___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ChatRoomComponent_vue_vue_type_template_id_37a4160f___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
   null,
-  "37a4160f",
+  null,
   null
   
 )
@@ -67240,35 +67134,19 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/js/components/ChatRoomComponent.vue?vue&type=style&index=0&id=37a4160f&lang=scss&scoped=true&":
-/*!*****************************************************************************************************************!*\
-  !*** ./resources/js/components/ChatRoomComponent.vue?vue&type=style&index=0&id=37a4160f&lang=scss&scoped=true& ***!
-  \*****************************************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_dist_cjs_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_ChatRoomComponent_vue_vue_type_style_index_0_id_37a4160f_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/style-loader!../../../node_modules/css-loader!../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../node_modules/postcss-loader/src??ref--7-2!../../../node_modules/sass-loader/dist/cjs.js??ref--7-3!../../../node_modules/vue-loader/lib??vue-loader-options!./ChatRoomComponent.vue?vue&type=style&index=0&id=37a4160f&lang=scss&scoped=true& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/sass-loader/dist/cjs.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ChatRoomComponent.vue?vue&type=style&index=0&id=37a4160f&lang=scss&scoped=true&");
-/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_dist_cjs_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_ChatRoomComponent_vue_vue_type_style_index_0_id_37a4160f_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_dist_cjs_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_ChatRoomComponent_vue_vue_type_style_index_0_id_37a4160f_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__);
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_dist_cjs_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_ChatRoomComponent_vue_vue_type_style_index_0_id_37a4160f_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_dist_cjs_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_ChatRoomComponent_vue_vue_type_style_index_0_id_37a4160f_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
- /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_index_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_2_node_modules_sass_loader_dist_cjs_js_ref_7_3_node_modules_vue_loader_lib_index_js_vue_loader_options_ChatRoomComponent_vue_vue_type_style_index_0_id_37a4160f_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0___default.a); 
-
-/***/ }),
-
-/***/ "./resources/js/components/ChatRoomComponent.vue?vue&type=template&id=37a4160f&scoped=true&":
-/*!**************************************************************************************************!*\
-  !*** ./resources/js/components/ChatRoomComponent.vue?vue&type=template&id=37a4160f&scoped=true& ***!
-  \**************************************************************************************************/
+/***/ "./resources/js/components/ChatRoomComponent.vue?vue&type=template&id=37a4160f&":
+/*!**************************************************************************************!*\
+  !*** ./resources/js/components/ChatRoomComponent.vue?vue&type=template&id=37a4160f& ***!
+  \**************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ChatRoomComponent_vue_vue_type_template_id_37a4160f_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./ChatRoomComponent.vue?vue&type=template&id=37a4160f&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ChatRoomComponent.vue?vue&type=template&id=37a4160f&scoped=true&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ChatRoomComponent_vue_vue_type_template_id_37a4160f_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ChatRoomComponent_vue_vue_type_template_id_37a4160f___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./ChatRoomComponent.vue?vue&type=template&id=37a4160f& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ChatRoomComponent.vue?vue&type=template&id=37a4160f&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ChatRoomComponent_vue_vue_type_template_id_37a4160f___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ChatRoomComponent_vue_vue_type_template_id_37a4160f_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ChatRoomComponent_vue_vue_type_template_id_37a4160f___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
