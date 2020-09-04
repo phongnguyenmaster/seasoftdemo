@@ -42,7 +42,6 @@ export default {
       message: "",
       page: 1,
       currentHeight: 0,
-      isLoadHistory: false,
       lastIdHistory: 0,
       list_user: [],
       activeIndex: 0,
@@ -63,16 +62,9 @@ export default {
     this.loadMessage(this.page);
   },
   updated: function () {
-    var container = this.$el.querySelector(".userlist");
-    if (!this.isLoadHistory) {
-      container.scrollTop = 0;
-    } else {
-      this.isLoadHistory = false;
-    }
   },
   methods: {
     loadMessage(page) {
-      this.isLoadHistory = true;
       axios
         .get("/loadlistuser/" + this.page)
         .then((response) => {

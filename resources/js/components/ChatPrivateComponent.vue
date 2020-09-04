@@ -3,7 +3,7 @@
     <div class="chat-title">
       <ChatUserItem :user="userReceiverInfo"></ChatUserItem>
     </div>
-    <div class="messages scroll-height">
+    <div class="messages scroll-height" :class="animation ? 'show' : ''">
       <div class="messages-content">
         <ChatItem
           v-for="(message, index) in list_messages"
@@ -53,6 +53,7 @@ export default {
       lastIdHistory: 0,
       list_messages: [],
       privateKey: 0,
+      animation: 0,
       userReceiverInfo: { avatar: "default.jpg" },
     };
   },
@@ -102,8 +103,10 @@ export default {
         this.receiver_id,
         function (data) {
           this.userReceiverInfo = data;
+          this.animation = 1;
         }.bind(this)
       );
+      this.animation = 0;
     },
     loadPrivateKey() {
       if (this.privateKey > 0) {
@@ -132,8 +135,10 @@ export default {
           lastIdHistory: this.lastIdHistory,
         })
         .then((response) => {
-          response.data.forEach((i) => this.list_messages.unshift(i));
-          this.lastIdHistory = response.data[response.data.length - 1]["id"];
+          if (response.data.length > 0) {
+            response.data.forEach((i) => this.list_messages.unshift(i));
+            this.lastIdHistory = response.data[response.data.length - 1]["id"];
+          }
         })
         .catch((error) => {
           console.log(error);

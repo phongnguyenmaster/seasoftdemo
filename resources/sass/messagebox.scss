@@ -3,12 +3,17 @@
     overflow-y: scroll;
     height: 100%;
     overflow-y: scroll;
-    background-image: url(/public/images/bgchat.jpg);
     background-repeat: no-repeat;
     background-size: cover;
+    opacity: 0.5;
+    transition: opacity 0s linear;
+    background-image: url(/public/images/bgchat.jpg);
     .messages-content {
         display: flex;
         flex-direction: column;
+    }
+    &.show {
+        opacity: 1;
     }
 }
 /*--------------------
@@ -71,7 +76,7 @@ Message Box
     width: 100%;
     height: 60px;
     position: relative;
-    input{
+    input {
         height: 60px;
     }
 

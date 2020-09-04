@@ -3,7 +3,7 @@
     <div class="chat-title">
       <ChatUserItem :user="userReceiverInfo"></ChatUserItem>
     </div>
-    <div class="messages scroll-height">
+    <div class="messages show scroll-height">
       <div class="messages-content">
         <ChatItem
           v-for="(message, index) in list_messages"

@@ -2140,7 +2140,6 @@ __webpack_require__.r(__webpack_exports__);
       message: "",
       page: 1,
       currentHeight: 0,
-      isLoadHistory: false,
       lastIdHistory: 0,
       list_user: [],
       activeIndex: 0
@@ -2159,20 +2158,11 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {
     this.loadMessage(this.page);
   },
-  updated: function updated() {
-    var container = this.$el.querySelector(".userlist");
-
-    if (!this.isLoadHistory) {
-      container.scrollTop = 0;
-    } else {
-      this.isLoadHistory = false;
-    }
-  },
+  updated: function updated() {},
   methods: {
     loadMessage: function loadMessage(page) {
       var _this = this;
 
-      this.isLoadHistory = true;
       axios.get("/loadlistuser/" + this.page).then(function (response) {
         if (response.data.length > 0) {
           response.data.forEach(function (i) {
@@ -2260,6 +2250,7 @@ var socket = io.connect("http://192.168.134.1:3000/privatechat");
       lastIdHistory: 0,
       list_messages: [],
       privateKey: 0,
+      animation: 0,
       userReceiverInfo: {
         avatar: "default.jpg"
       }
@@ -2311,7 +2302,9 @@ var socket = io.connect("http://192.168.134.1:3000/privatechat");
       this.lastIdHistory = 0;
       this.$root.getUserInfo(this.receiver_id, function (data) {
         this.userReceiverInfo = data;
+        this.animation = 1;
       }.bind(this));
+      this.animation = 0;
     },
     loadPrivateKey: function loadPrivateKey() {
       var _this2 = this;
@@ -2342,10 +2335,12 @@ var socket = io.connect("http://192.168.134.1:3000/privatechat");
         privateKey: this.privateKey,
         lastIdHistory: this.lastIdHistory
       }).then(function (response) {
-        response.data.forEach(function (i) {
-          return _this3.list_messages.unshift(i);
-        });
-        _this3.lastIdHistory = response.data[response.data.length - 1]["id"];
+        if (response.data.length > 0) {
+          response.data.forEach(function (i) {
+            return _this3.list_messages.unshift(i);
+          });
+          _this3.lastIdHistory = response.data[response.data.length - 1]["id"];
+        }
       })["catch"](function (error) {
         console.log(error);
       });
@@ -49344,23 +49339,30 @@ var render = function() {
       1
     ),
     _vm._v(" "),
-    _c("div", { staticClass: "messages scroll-height" }, [
-      _c(
-        "div",
-        { staticClass: "messages-content" },
-        _vm._l(_vm.list_messages, function(message, index) {
-          return _c("ChatItem", {
-            key: index,
-            attrs: {
-              beforeId: index > 0 ? _vm.list_messages[index - 1].user.id : 0,
-              isRoom: false,
-              message: message
-            }
-          })
-        }),
-        1
-      )
-    ]),
+    _c(
+      "div",
+      {
+        staticClass: "messages scroll-height",
+        class: _vm.animation ? "show" : ""
+      },
+      [
+        _c(
+          "div",
+          { staticClass: "messages-content" },
+          _vm._l(_vm.list_messages, function(message, index) {
+            return _c("ChatItem", {
+              key: index,
+              attrs: {
+                beforeId: index > 0 ? _vm.list_messages[index - 1].user.id : 0,
+                isRoom: false,
+                message: message
+              }
+            })
+          }),
+          1
+        )
+      ]
+    ),
     _vm._v(" "),
     _c("div", { staticClass: "message-box" }, [
       _c("input", {
@@ -49436,7 +49438,7 @@ var render = function() {
       1
     ),
     _vm._v(" "),
-    _c("div", { staticClass: "messages scroll-height" }, [
+    _c("div", { staticClass: "messages show scroll-height" }, [
       _c(
         "div",
         { staticClass: "messages-content" },
