@@ -1,7 +1,7 @@
 <template>
   <div class="chat">
     <div class="chat-title">
-      <ChatUserItem :user="userReceiverInfo"></ChatUserItem>
+      <ChatUserItem :isActive="false" :user="userReceiverInfo"></ChatUserItem>
     </div>
     <div class="messages show scroll-height">
       <div class="messages-content">
@@ -43,6 +43,7 @@ export default {
     };
   },
   mounted() {
+    console.log("1");
     var container = this.$el.querySelector(".messages");
     $(container).scroll(
       function (e) {
@@ -65,6 +66,7 @@ export default {
   updated: function () {
     var container = this.$el.querySelector(".messages");
     if (!this.isLoadHistory) {
+      console.log(container.scrollHeight);
       container.scrollTop = container.scrollHeight;
     } else {
       container.scrollTop =
@@ -78,9 +80,13 @@ export default {
       axios
         .get("/loadmessageroom/" + this.lastIdHistory)
         .then((response) => {
-          response.data.forEach((i) => this.list_messages.unshift(i));
-          this.page++;
-          this.lastIdHistory = response.data[response.data.length - 1]["id"];
+          if (response.data.length > 0) {
+            response.data.forEach((i) => this.list_messages.unshift(i));
+            this.page++;
+            this.lastIdHistory = response.data[response.data.length - 1]["id"];
+          } else {
+            this.isLoadHistory = false;
+          }
         })
         .catch((error) => {
           console.log(error);

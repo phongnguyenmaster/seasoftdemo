@@ -2,7 +2,7 @@
   <div>
     <div class="chat">
       <div class="chat-title">
-        <h1>CHAT</h1>
+        <h1 class="text-center">CHAT</h1>
       </div>
       <div class="userlist scroll-height">
         <div class="userlist-content">

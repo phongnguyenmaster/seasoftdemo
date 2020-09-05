@@ -1,7 +1,7 @@
 <template>
   <div class="chat">
     <div class="chat-title">
-      <ChatUserItem :user="userReceiverInfo"></ChatUserItem>
+      <ChatUserItem :isActive="false" :user="userReceiverInfo"></ChatUserItem>
     </div>
     <div class="messages scroll-height" :class="animation ? 'show' : ''">
       <div class="messages-content">
