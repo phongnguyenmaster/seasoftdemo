@@ -15,27 +15,20 @@
       </div>
     </div>
     <div class="message-box">
-      <input
-        type="text"
-        @keyup.enter="sendMessage"
-        class="message-input form-control"
-        id="txtMessage"
-        placeholder="Type message..."
-      />
-      <button type="button" class="message-submit btn btn-success" @click="sendMessage">
-        <i class="fa fa-paper-plane"></i> Send
-      </button>
+      <ChatInput></ChatInput>
     </div>
   </div>
 </template>
 <script>
 import ChatItem from "./ChatItemComponent.vue";
-import ChatListUser from "./ChatListUserComponent.vue";
 import ChatUserItem from "./ChatUserItemComponent.vue";
+import ChatInput from "./ChatInputComponent.vue";
+
 export default {
   components: {
     ChatItem,
     ChatUserItem,
+    ChatInput,
   },
   data() {
     return {
@@ -46,7 +39,7 @@ export default {
       lastIdHistory: 0,
       list_messages: [],
       userReceiverInfo: { avatar: "chatroom.jpg", name: "ROOM CHAT" },
-      socket : io.connect($("#socketUrl").val())
+      socket: io.connect($("#socketUrl").val()),
     };
   },
   mounted() {
@@ -93,24 +86,21 @@ export default {
           console.log(error);
         });
     },
-    sendMessage() {
-      this.message = this.$el.querySelector("#txtMessage").value;
-      this.$el.querySelector("#txtMessage").value = "";
-      if (this.message.length == 0) {
+    sendMessage(message) {
+      if (message.length == 0) {
         return;
       }
       // Append message before send to server.
-      var messageContent = this.message;
-      this.message = "";
+      var messageContent = message;
       var newMessage = {
-        message: messageContent,
+        message: message,
         user: this.$root.currentUserLogin,
         created_at: Date.now(),
       };
       this.list_messages.push(newMessage);
       axios
         .post("/newMessages", {
-          message: messageContent,
+          message: newMessage.message,
         })
         .then((response) => {
           this.socket.emit("newmessage", response.data.message);

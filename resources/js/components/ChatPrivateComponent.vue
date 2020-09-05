@@ -15,16 +15,7 @@
       </div>
     </div>
     <div class="message-box">
-      <input
-        type="text"
-        v-model="message"
-        @keyup.enter="sendMessage"
-        class="message-input form-control"
-        placeholder="Type message..."
-      />
-      <button type="button" class="message-submit btn btn-success" @click="sendMessage">
-        <i class="fa fa-paper-plane"></i> Send
-      </button>
+      <ChatInput></ChatInput>
     </div>
   </div>
 </template>
@@ -32,11 +23,13 @@
 <script>
 import ChatItem from "./ChatItemComponent.vue";
 import ChatUserItem from "./ChatUserItemComponent.vue";
+import ChatInput from "./ChatInputComponent.vue";
 
 export default {
   components: {
     ChatItem,
     ChatUserItem,
+    ChatInput,
   },
   props: {
     receiver_id: 0,
@@ -142,22 +135,20 @@ export default {
           console.log(error);
         });
     },
-    sendMessage() {
-      if (this.message.length == 0) {
+    sendMessage(message) {
+      if (message.length == 0) {
         return;
       }
       // Append message before send to server.
-      var messageContent = this.message;
-      this.message = "";
       var newMessage = {
-        message: messageContent,
+        message: message,
         user: this.$root.currentUserLogin,
         created_at: Date.now(),
       };
       this.list_messages.push(newMessage);
       axios
         .post("/newMessages", {
-          message: messageContent,
+          message: newMessage.message,
           privateKey: this.privateKey,
         })
         .then((response) => {

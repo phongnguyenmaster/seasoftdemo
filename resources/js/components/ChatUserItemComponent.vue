@@ -6,7 +6,7 @@
       </div>
       <div class="user-name hiddenwidth">
         {{ user.name}}
-        <div class="time">{{ user.updated_at | moment("from", "now") }}</div>
+        <div class="time">{{ $moment(user.updated_at).fromNow() }}</div>
       </div>
     </div>
   </div>

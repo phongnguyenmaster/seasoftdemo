@@ -18,7 +18,7 @@
         v-if="isRoom && (beforeId != message.user.id) && ($root.currentUserLogin.id !== message.user.id)"
       >{{ message.user.name }}</div>
       <div class="messagecontent">{{ message.message }}</div>
-      <div class="timestamp">{{ message.created_at | moment("from", "now") }}</div>
+      <div class="timestamp">{{ new Date(message.created_at) | moment("from", "now") }}</div>
     </div>
   </div>
 </template>
