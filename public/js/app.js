@@ -2011,6 +2011,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     message: {
@@ -2062,26 +2063,32 @@ __webpack_require__.r(__webpack_exports__);
       receiver_id: 0
     };
   },
+  created: function created() {
+    this.$parent.getCurrentUserLogin();
+  },
   mounted: function mounted() {
-    $(".col-user-list").resizable();
     var totalWidth = $(window).width() - 1;
-    $(".col-user-list").resizable({
-      maxWidth: $(window).width() / 2,
-      handles: 'e, w',
+    $("#col-user-list").resizable({
+      maxWidth: totalWidth / 2,
+      minWidth: 86,
+      handles: "e, w",
       resize: function resize(event, ui) {
-        var width = $(".col-user-list").width();
+        var width = $("#col-user-list").width();
+        $("#col-main-chat").css("width", totalWidth - width);
+      }
+    }); // Reset resize for list user
 
-        if (width > totalWidth) {
-          width = totalWidth;
-          $(".col-user-list").css("width", width);
-        }
-
-        $("#div2").css("width", totalWidth - width);
+    $(window).resize(function (e) {
+      if (e.target == window) {
+        totalWidth = $(window).width() - 1;
+        $("#col-user-list").css("width", "");
+        $("#col-main-chat").css("width", "");
+        $("#col-user-list").resizable("option", {
+          maxWidth: $(window).width() / 2
+        });
       }
     });
   },
-  created: function created() {},
-  updated: function updated() {},
   computed: {
     currentProperties: function currentProperties() {
       if (this.current === "ChatPrivate") {
@@ -2246,9 +2253,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
- //var socket = io.connect("http://192.168.134.1:3000");
 
-var socket = io.connect("http://192.168.134.1:3000/privatechat");
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
     ChatItem: _ChatItemComponent_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
@@ -2269,7 +2274,8 @@ var socket = io.connect("http://192.168.134.1:3000/privatechat");
       animation: 0,
       userReceiverInfo: {
         avatar: "default.jpg"
-      }
+      },
+      socket: io.connect($("#socketUrl").val() + "/privatechat")
     };
   },
   mounted: function mounted() {
@@ -2290,7 +2296,7 @@ var socket = io.connect("http://192.168.134.1:3000/privatechat");
     var _this = this;
 
     this.changeReceiver();
-    socket.on("MessagePosted", function (msg) {
+    this.socket.on("MessagePosted", function (msg) {
       //let message = msg
       //message.user = data.user
       _this.list_messages.push(msg);
@@ -2326,7 +2332,7 @@ var socket = io.connect("http://192.168.134.1:3000/privatechat");
       var _this2 = this;
 
       if (this.privateKey > 0) {
-        socket.emit("unregisterregister", this.privateKey);
+        this.socket.emit("unregisterregister", this.privateKey);
       }
 
       axios.get("/getPrivateKey/" + this.receiver_id).then(function (response) {
@@ -2335,7 +2341,7 @@ var socket = io.connect("http://192.168.134.1:3000/privatechat");
 
           _this2.loadMessage();
 
-          socket.emit("register", _this2.privateKey);
+          _this2.socket.emit("register", _this2.privateKey);
         } else {
           alert(response.data.message);
         }
@@ -2382,8 +2388,8 @@ var socket = io.connect("http://192.168.134.1:3000/privatechat");
         privateKey: this.privateKey
       }).then(function (response) {
         response.data.message.privateKey = _this4.privateKey;
-        console.log(response.data);
-        socket.emit("private_chat", response.data.message);
+
+        _this4.socket.emit("private_chat", response.data.message);
       })["catch"](function (error) {
         console.log(error);
       });
@@ -2438,8 +2444,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var socket = io.connect("http://192.168.134.1:3000"); //var socketPrivate = io.connect("http://192.168.134.1:3000/privatechat");
-
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
     ChatItem: _ChatItemComponent_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
@@ -2456,7 +2460,8 @@ var socket = io.connect("http://192.168.134.1:3000"); //var socketPrivate = io.c
       userReceiverInfo: {
         avatar: "chatroom.jpg",
         name: "ROOM CHAT"
-      }
+      },
+      socket: io.connect($("#socketUrl").val())
     };
   },
   mounted: function mounted() {
@@ -2474,7 +2479,7 @@ var socket = io.connect("http://192.168.134.1:3000"); //var socketPrivate = io.c
     var _this = this;
 
     this.loadMessage(this.page);
-    socket.on("MessagePosted", function (msg) {
+    this.socket.on("MessagePosted", function (msg) {
       //let message = msg
       //message.user = data.user
       _this.list_messages.push(msg);
@@ -2506,6 +2511,8 @@ var socket = io.connect("http://192.168.134.1:3000"); //var socketPrivate = io.c
       });
     },
     sendMessage: function sendMessage() {
+      var _this3 = this;
+
       this.message = this.$el.querySelector("#txtMessage").value;
       this.$el.querySelector("#txtMessage").value = "";
 
@@ -2525,7 +2532,7 @@ var socket = io.connect("http://192.168.134.1:3000"); //var socketPrivate = io.c
       axios.post("/newMessages", {
         message: messageContent
       }).then(function (response) {
-        socket.emit("newmessage", response.data.message);
+        _this3.socket.emit("newmessage", response.data.message);
       })["catch"](function (error) {
         console.log(error);
       });
@@ -9533,7 +9540,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".message[data-v-46f276d7] {\n  position: relative;\n}\n.message .content[data-v-46f276d7] {\n  padding: 5px 8px 6px;\n  margin-top: 2px;\n  margin-bottom: 2px;\n  border-radius: 0px 8px 8px 8px;\n  word-break: break-word;\n}\n.message .content .messagecontent[data-v-46f276d7] {\n  font-size: 15px;\n  color: #222222;\n}\n.message .content .timestamp[data-v-46f276d7],\n.message .content .name[data-v-46f276d7] {\n  color: #b6b6b6;\n  font-size: 12px;\n}\n.reply-chat .img[data-v-46f276d7] {\n  position: absolute;\n}\n.reply-chat .img img[data-v-46f276d7] {\n  width: 40px;\n  height: 40px;\n  border-radius: 100%;\n  float: left;\n  border: 1px solid #f1f0f0;\n  margin: 1px;\n}\n.reply-chat .content[data-v-46f276d7] {\n  background-color: white;\n  float: left;\n  margin-left: 45px;\n}\n.my-chat .content[data-v-46f276d7] {\n  background-color: #dae9ff;\n  float: right;\n}\n.my-chat .content .timestamp[data-v-46f276d7] {\n  color: rgba(0, 0, 0, 0.5);\n}", ""]);
+exports.push([module.i, ".message[data-v-46f276d7] {\n  position: relative;\n}\n.message .content[data-v-46f276d7] {\n  padding: 5px 8px 6px;\n  margin-top: 2px;\n  margin-bottom: 2px;\n  border-radius: 8px;\n  word-break: break-word;\n}\n.message .content .messagecontent[data-v-46f276d7] {\n  font-size: 15px;\n  color: #222222;\n}\n.message .content .timestamp[data-v-46f276d7],\n.message .content .name[data-v-46f276d7] {\n  color: #b6b6b6;\n  font-size: 12px;\n}\n.reply-chat .img[data-v-46f276d7] {\n  position: absolute;\n}\n.reply-chat .img img[data-v-46f276d7] {\n  width: 40px;\n  height: 40px;\n  border-radius: 100%;\n  float: left;\n  border: 1px solid #f1f0f0;\n  margin: 1px;\n}\n.reply-chat .content[data-v-46f276d7] {\n  background-color: white;\n  float: left;\n  margin-left: 45px;\n  margin-right: 20px;\n}\n.my-chat .content[data-v-46f276d7] {\n  background-color: #dae9ff;\n  float: right;\n  margin-left: 20px;\n}\n.my-chat .content .timestamp[data-v-46f276d7] {\n  color: rgba(0, 0, 0, 0.5);\n}", ""]);
 
 // exports
 
@@ -9552,7 +9559,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".mainchat .col-user-list[data-v-3e943a40] {\n  width: 25%;\n}\n.mainchat #div2[data-v-3e943a40] {\n  width: 75%;\n}\n.mainchat .col-user-list[data-v-3e943a40],\n.mainchat .col-9[data-v-3e943a40] {\n  background-color: #fff;\n}\n.mainchat .col-user-list[data-v-3e943a40] {\n  padding-right: 0px;\n  padding-left: 0px;\n  border-right: 1px solid #dedbdb;\n}\n.mainchat .col-9[data-v-3e943a40] {\n  padding-left: 0px;\n  padding-right: 0px;\n}", ""]);
+exports.push([module.i, ".mainchat[data-v-3e943a40] {\n  overflow: hidden;\n  height: calc(100vh - 55px);\n}\n.mainchat #col-user-list[data-v-3e943a40] {\n  width: 25%;\n}\n.mainchat #col-main-chat[data-v-3e943a40] {\n  width: 75%;\n}\n.mainchat #col-user-list[data-v-3e943a40],\n.mainchat #col-main-chat[data-v-3e943a40] {\n  background-color: #fff;\n}\n.mainchat #col-user-list[data-v-3e943a40] {\n  padding-right: 0px;\n  padding-left: 0px;\n  border-right: 1px solid #dedbdb;\n}\n.mainchat #col-main-chat[data-v-3e943a40] {\n  padding-left: 0px;\n  padding-right: 0px;\n}", ""]);
 
 // exports
 
@@ -51513,7 +51520,8 @@ var render = function() {
       class:
         _vm.$root.currentUserLogin.id !== _vm.message.user.id
           ? "reply-chat"
-          : "my-chat"
+          : "my-chat",
+      attrs: { id: _vm.$root.currentUserLogin.id }
     },
     [
       _vm.beforeId != _vm.message.user.id &&
@@ -51576,16 +51584,11 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "row mainchat" }, [
-    _c(
-      "div",
-      { staticClass: "col-chat col-user-list" },
-      [_c("ChatListUser")],
-      1
-    ),
+    _c("div", { attrs: { id: "col-user-list" } }, [_c("ChatListUser")], 1),
     _vm._v(" "),
     _c(
       "div",
-      { staticClass: "col-chat", attrs: { id: "div2" } },
+      { attrs: { id: "col-main-chat" } },
       [
         _c(
           _vm.current,
@@ -69066,9 +69069,6 @@ var app = new Vue({
   el: '#app',
   data: {
     currentUserLogin: {}
-  },
-  created: function created() {
-    this.getCurrentUserLogin();
   },
   methods: {
     getCurrentUserLogin: function getCurrentUserLogin() {

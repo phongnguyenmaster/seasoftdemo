@@ -1568,6 +1568,10 @@ a.ui-button:active,
   display: block;
 }
 
+.main {
+  margin-top: 55px;
+}
+
 .user {
   border-radius: 10px;
 }
@@ -1636,7 +1640,6 @@ a.ui-button:active,
 .messages .messages-content {
   display: flex;
   flex-direction: column;
-  margin-bottom: 20px;
 }
 
 .messages.show {

@@ -2,4 +2,5 @@
 
 return [
     'user' => 'User',
+    'email' => 'Email',
 ];

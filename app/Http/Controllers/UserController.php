@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use Illuminate\Support\Facades\Auth;
 use Intervention\Image\ImageManagerStatic as Image;
 use Validator;
 
@@ -65,17 +66,6 @@ class UserController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
@@ -96,12 +86,23 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required',
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|max:100',
+            'email' => 'required|max:100|email',
         ]);
+        if ($validator->fails()) {
+            return redirect('user/' . Auth::user()->id . '/edit')
+                ->withErrors($validator)
+                ->withInput();
+        }
         // Check email is exist
-        // TO DO LOGIC HERE (Nếu kịp thời gian thì viết)
+        $existUser = $this->checkUserExist($request->get('email'));
+        if ($existUser) {
+            $validator->errors()->add('email', __('validation.is_exist', ['attribute' => __('field.email')]));
+            return redirect('user/' . Auth::user()->id . '/edit')
+                ->withErrors($validator)
+                ->withInput();
+        }
         $user = User::find($id);
         $user->name =  $request->get('name');
         $user->email = $request->get('email');
@@ -154,14 +155,14 @@ class UserController extends Controller
         $user = $this->getUserInfoById($id);
         if (!$user) {
             $dataResult['status'] = 0;
-            $dataResult['message'] = __('not_exist', ['attribute' => __('object.user')]);
+            $dataResult['message'] = __('not_exist', ['attribute' => __('field.user')]);
             return $dataResult;
         }
         return $user;
     }
-    private function checkIfUserExist($email)
+    private function checkUserExist($email)
     {
-        $user = User::where('email', $email)->first();
+        $user = User::where('email', $email)->where('id', '!=', Auth::user()->id)->first();
         if ($user) {
             return $user;
         } else {

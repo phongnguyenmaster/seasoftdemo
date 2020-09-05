@@ -32,9 +32,6 @@
 import ChatItem from "./ChatItemComponent.vue";
 import ChatListUser from "./ChatListUserComponent.vue";
 import ChatUserItem from "./ChatUserItemComponent.vue";
-var socket = io.connect("http://192.168.134.1:3000");
-//var socketPrivate = io.connect("http://192.168.134.1:3000/privatechat");
-
 export default {
   components: {
     ChatItem,
@@ -49,6 +46,7 @@ export default {
       lastIdHistory: 0,
       list_messages: [],
       userReceiverInfo: { avatar: "chatroom.jpg", name: "ROOM CHAT" },
+      socket : io.connect($("#socketUrl").val())
     };
   },
   mounted() {
@@ -65,7 +63,7 @@ export default {
   },
   created() {
     this.loadMessage(this.page);
-    socket.on("MessagePosted", (msg) => {
+    this.socket.on("MessagePosted", (msg) => {
       //let message = msg
       //message.user = data.user
       this.list_messages.push(msg);
@@ -115,7 +113,7 @@ export default {
           message: messageContent,
         })
         .then((response) => {
-          socket.emit("newmessage", response.data.message);
+          this.socket.emit("newmessage", response.data.message);
         })
         .catch((error) => {
           console.log(error);

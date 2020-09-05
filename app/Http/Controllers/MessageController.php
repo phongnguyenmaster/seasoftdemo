@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Message;
 use Validator;
+use Auth;
 
 class MessageController extends Controller
 {
@@ -12,7 +13,25 @@ class MessageController extends Controller
     {
         $this->middleware('auth');
     }
-
+    function newMessages(Request $request)
+    {
+        $dataResult = array('status' => 1, 'message' => '');
+        $validator = Validator::make($request->all(), [
+            'message' => 'required',
+        ]);
+        if ($validator->fails()) {
+            $dataResult['status'] = 0;
+            $dataResult['message'] = __('validation.invalid_data');
+            return $dataResult;
+        }
+        $user = Auth::user();
+        $message = new Message();
+        $message->message = request()->get('message', '');
+        $message->private_key = request()->get('privateKey', 0);;
+        $message->user_id = $user->id;
+        $message->save();
+        return ['message' => $message->load('user')];
+    }
     function getMessageChatRoom($lastIdHistory)
     {
         $validator = Validator::make(array('lastIdHistory' => $lastIdHistory), [

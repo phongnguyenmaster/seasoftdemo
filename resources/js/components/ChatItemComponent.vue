@@ -1,6 +1,7 @@
 <template>
   <div
     class="message"
+    :id="$root.currentUserLogin.id"
     :class="($root.currentUserLogin.id !== message.user.id ? 'reply-chat': 'my-chat')"
   >
     <div
@@ -42,7 +43,7 @@ export default {
     padding: 5px 8px 6px;
     margin-top: 2px;
     margin-bottom: 2px;
-    border-radius: 0px 8px 8px 8px;
+    border-radius: 8px;
     word-break: break-word;
     .messagecontent {
       font-size: 15px;
@@ -72,12 +73,14 @@ export default {
     background-color: white;
     float: left;
     margin-left: 45px;
+    margin-right: 20px;
   }
 }
 .my-chat {
   .content {
     background-color: #dae9ff;
     float: right;
+    margin-left: 20px;
     .timestamp {
       color: rgba(0, 0, 0, 0.5);
     }

@@ -38,9 +38,6 @@ const app = new Vue({
     data: {
         currentUserLogin: {}
     },
-    created() {
-        this.getCurrentUserLogin()
-    },
     methods: {
         getCurrentUserLogin() {
             axios.get('/getUserLogin')
@@ -49,7 +46,7 @@ const app = new Vue({
                 })
         },
         getUserInfo(id, callback) {
-            axios.post('/getUserInfo',{'id' : id})
+            axios.post('/getUserInfo', { 'id': id })
                 .then(response => {
                     callback(response.data);
                 })

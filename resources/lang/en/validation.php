@@ -13,6 +13,7 @@ return [
     |
     */
     'not_exist' => ':attribute not exist',
+    'is_exist' => ':attribute is existed',
     'invalid_data' => 'Invalid data',
     'accepted' => 'The :attribute must be accepted.',
     'active_url' => 'The :attribute is not a valid URL.',

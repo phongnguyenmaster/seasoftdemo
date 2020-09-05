@@ -33,9 +33,6 @@
 import ChatItem from "./ChatItemComponent.vue";
 import ChatUserItem from "./ChatUserItemComponent.vue";
 
-//var socket = io.connect("http://192.168.134.1:3000");
-var socket = io.connect("http://192.168.134.1:3000/privatechat");
-
 export default {
   components: {
     ChatItem,
@@ -55,6 +52,7 @@ export default {
       privateKey: 0,
       animation: 0,
       userReceiverInfo: { avatar: "default.jpg" },
+      socket: io.connect($("#socketUrl").val() + "/privatechat"),
     };
   },
   mounted() {
@@ -73,7 +71,7 @@ export default {
   },
   created() {
     this.changeReceiver();
-    socket.on("MessagePosted", (msg) => {
+    this.socket.on("MessagePosted", (msg) => {
       //let message = msg
       //message.user = data.user
       this.list_messages.push(msg);
@@ -110,7 +108,7 @@ export default {
     },
     loadPrivateKey() {
       if (this.privateKey > 0) {
-        socket.emit("unregisterregister", this.privateKey);
+        this.socket.emit("unregisterregister", this.privateKey);
       }
       axios
         .get("/getPrivateKey/" + this.receiver_id)
@@ -118,7 +116,7 @@ export default {
           if (response.data.status == 1) {
             this.privateKey = response.data.private_key;
             this.loadMessage();
-            socket.emit("register", this.privateKey);
+            this.socket.emit("register", this.privateKey);
           } else {
             alert(response.data.message);
           }
@@ -164,8 +162,7 @@ export default {
         })
         .then((response) => {
           response.data.message.privateKey = this.privateKey;
-          console.log(response.data);
-          socket.emit("private_chat", response.data.message);
+          this.socket.emit("private_chat", response.data.message);
         })
         .catch((error) => {
           console.log(error);

@@ -5,6 +5,7 @@ var io = require('socket.io')(http);
 // Public Rom chat
 io.on('connection', (socket) => {
     socket.on('disconnect', () => {
+        console.log('Disconnect');
     });
     socket.on('newmessage', (msg) => {
         socket.broadcast.emit('MessagePosted', msg);

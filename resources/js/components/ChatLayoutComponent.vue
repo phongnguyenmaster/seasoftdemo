@@ -1,9 +1,9 @@
 <template>
   <div class="row mainchat">
-    <div class="col-chat col-user-list">
+    <div id="col-user-list">
       <ChatListUser></ChatListUser>
     </div>
-    <div id="div2" class="col-chat">
+    <div id="col-main-chat">
       <component :is="current" v-bind="currentProperties"></component>
     </div>
   </div>
@@ -26,24 +26,32 @@ export default {
       receiver_id: 0,
     };
   },
+  created() {
+    this.$parent.getCurrentUserLogin();
+  },
   mounted() {
-    $(".col-user-list").resizable();
     var totalWidth = $(window).width() - 1;
-    $(".col-user-list").resizable({
-      maxWidth: $(window).width() / 2,
-      handles: 'e, w',
+    $("#col-user-list").resizable({
+      maxWidth: totalWidth / 2,
+      minWidth: 86,
+      handles: "e, w",
       resize: function (event, ui) {
-        var width = $(".col-user-list").width();
-        if (width > totalWidth) {
-          width = totalWidth;
-          $(".col-user-list").css("width", width);
-        }
-        $("#div2").css("width", totalWidth - width);
+        var width = $("#col-user-list").width();
+        $("#col-main-chat").css("width", totalWidth - width);
       },
     });
+    // Reset resize for list user
+    $(window).resize(function (e) {
+      if (e.target == window) {
+        totalWidth = $(window).width() - 1;
+        $("#col-user-list").css("width", "");
+        $("#col-main-chat").css("width", "");
+        $("#col-user-list").resizable("option", {
+          maxWidth: $(window).width() / 2,
+        });
+      }
+    });
   },
-  created() {},
-  updated: function () {},
   computed: {
     currentProperties: function () {
       if (this.current === "ChatPrivate") {
@@ -65,22 +73,24 @@ export default {
 
 <style lang="scss" scoped>
 .mainchat {
-  .col-user-list {
+  overflow: hidden;
+  height: calc(100vh - 55px);
+  #col-user-list {
     width: 25%;
   }
-  #div2 {
+  #col-main-chat {
     width: 75%;
   }
-  .col-user-list,
-  .col-9 {
+  #col-user-list,
+  #col-main-chat {
     background-color: #fff;
   }
-  .col-user-list {
+  #col-user-list {
     padding-right: 0px;
     padding-left: 0px;
     border-right: 1px solid #dedbdb;
   }
-  .col-9 {
+  #col-main-chat {
     padding-left: 0px;
     padding-right: 0px;
   }
