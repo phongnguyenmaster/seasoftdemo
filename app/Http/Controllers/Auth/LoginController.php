@@ -80,6 +80,12 @@ class LoginController extends Controller
                     $userNew->email = $userSocical->email;
                     $userNew->$socialCol = $userSocical->id;
                     $userNew->password = bcrypt($userSocical->id);
+                    if ($userSocical->getAvatar()) {
+                        $fileName = uniqid() . '.' . 'png';
+                        $path = public_path() . '/avatar/' . $fileName;
+                        copy($userSocical->getAvatar(), $path);
+                        $userNew->avatar = $fileName;
+                    }
                     $userNew->save();
                     Auth::login($userNew);
                 }
