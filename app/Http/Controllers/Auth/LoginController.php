@@ -45,14 +45,11 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
-    public function redirectToGoogle()
-    {
-        return Socialite::driver('google')->redirect();
-    }
+
     public function redirectToSocial($socialType)
     {
         $validator = Validator::make(array('socialType' => $socialType), [
-            'socialType' => 'required|in:google,facebook,github',
+            'socialType' => 'required|in:google,facebook,github,linkedin',
         ]);
         if ($validator->fails()) {
             return abort(404);
@@ -61,31 +58,35 @@ class LoginController extends Controller
     }
     public function handleSocialCallback($socialType)
     {
-        $socialCol = $socialType . '_id';
-        $userSocical = Socialite::driver($socialType)->user();
-        $findUserBySocialId = User::where($socialCol, $userSocical->id)->first();
-        if ($findUserBySocialId) {
-            Auth::login($findUserBySocialId);
-        } else {
-            $findUserByEmail = null;
-            if ($userSocical->email) {
-                $findUserByEmail = User::where('email', $userSocical->email)->first();
-            }
-            if ($findUserByEmail) {
-                // Update google Id and login
-                $findUserByEmail->$socialCol = $userSocical->id;
-                $findUserByEmail->save();
-                Auth::login($findUserByEmail);
+        try {
+            $socialCol = $socialType . '_id';
+            $userSocical = Socialite::driver($socialType)->user();
+            $findUserBySocialId = User::where($socialCol, $userSocical->id)->first();
+            if ($findUserBySocialId) {
+                Auth::login($findUserBySocialId);
             } else {
-                $userNew = new User;
-                $userNew->name = $userSocical->name;
-                $userNew->email = $userSocical->email;
-                $userNew->$socialCol = $userSocical->id;
-                $userNew->password = bcrypt($userSocical->id);
-                $userNew->save();
-                Auth::login($userNew);
+                $findUserByEmail = null;
+                if ($userSocical->email) {
+                    $findUserByEmail = User::where('email', $userSocical->email)->first();
+                }
+                if ($findUserByEmail) {
+                    // Update google Id and login
+                    $findUserByEmail->$socialCol = $userSocical->id;
+                    $findUserByEmail->save();
+                    Auth::login($findUserByEmail);
+                } else {
+                    $userNew = new User;
+                    $userNew->name = $socialType . '-' . $userSocical->name;
+                    $userNew->email = $userSocical->email;
+                    $userNew->$socialCol = $userSocical->id;
+                    $userNew->password = bcrypt($userSocical->id);
+                    $userNew->save();
+                    Auth::login($userNew);
+                }
             }
+            return redirect('/');
+        } catch (Exception $ex) {
+            return redirect('/login')->with('status', __('message.login_faild'));
         }
-        return redirect('/')->with('status', 'You are logged in!');
     }
 }

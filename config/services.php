@@ -44,4 +44,9 @@ return [
         'client_secret' => 'f863abedcc53ebcd904616f6688b8498f391d109',
         'redirect' => env('APP_URL') . '/auth/social/callback/github',
     ],
+    'linkedin' => [
+        'client_id' => '860g8jdlb87njj',
+        'client_secret' => '09owaSHRuA46YZiv',
+        'redirect' => env('APP_URL') . '/auth/social/callback/linkedin',
+    ],
 ];
