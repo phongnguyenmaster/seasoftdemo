@@ -45,9 +45,6 @@ export default {
         totalWidth = $(window).width() - 1;
         $("#col-user-list").css("width", "");
         $("#col-main-chat").css("width", "");
-        $("#col-user-list").resizable("option", {
-          maxWidth: $(window).width() / 2,
-        });
       }
     });
   },

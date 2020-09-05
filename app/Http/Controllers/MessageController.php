@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Message;
 use Validator;
 use Auth;
+use App\User;
 
 class MessageController extends Controller
 {
@@ -56,11 +57,16 @@ class MessageController extends Controller
         $validator = Validator::make(array('receiver_id' => $receiver_id), [
             'receiver_id' => 'required|numeric',
         ]);
-        // Check user is exist
-        // TO DO LOGIC HERE (Nếu kịp thời gian thì viết)
         if ($validator->fails()) {
             $dataResult['status'] = 0;
-            $dataResult['message'] = 'Invalid data';
+            $dataResult['message'] = __('validation.invalid_data');;
+            return $dataResult;
+        }
+        // Check user is exist
+        $user = User::where('id', $receiver_id)->first();
+        if (!$user) {
+            $dataResult['status'] = 0;
+            $dataResult['message'] = __('validation.invalid_data');
             return $dataResult;
         }
         $message = new Message();
