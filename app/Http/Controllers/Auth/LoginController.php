@@ -90,7 +90,7 @@ class LoginController extends Controller
                     Auth::login($userNew);
                 }
             }
-            return redirect('/');
+            return redirect('/')->with('status', __('message.login_succ'));
         } catch (Exception $ex) {
             return redirect('/login')->with('status', __('message.login_faild'));
         }

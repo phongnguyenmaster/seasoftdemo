@@ -30,9 +30,8 @@ export default {
     this.$parent.getCurrentUserLogin();
   },
   mounted() {
-    var totalWidth = $(window).width() - 1;
+    var totalWidth = $(".mainchat").width() - 1;
     $("#col-user-list").resizable({
-      maxWidth: totalWidth / 2,
       minWidth: 86,
       handles: "e, w",
       resize: function (event, ui) {
@@ -74,6 +73,7 @@ export default {
 <style lang="scss" scoped>
 .mainchat {
   overflow: hidden;
+  width: 100vw;
   height: calc(100vh - 55px);
   #col-user-list {
     width: 25%;

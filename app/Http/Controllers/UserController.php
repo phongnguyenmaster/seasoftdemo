@@ -35,39 +35,6 @@ class UserController extends Controller
         $user = new User();
         return $user->getListUser($page);
     }
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return view('user.create');
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required',
-            'password' => 'required'
-        ]);
-        // Check email is exist
-        // TO DO LOGIC HERE (Nếu kịp thời gian thì viết)
-        $contact = new User([
-            'name' => $request->get('name'),
-            'email' => $request->get('email'),
-            'password' => $request->get('password'),
-        ]);
-        $contact->save();
-        return redirect('/user')->with('success', 'User saved!');
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -116,7 +83,6 @@ class UserController extends Controller
             $extension = $request->file->getClientOriginalExtension();  //Get Image Extension
             $fileName = uniqid() . '.' . $extension;  //Concatenate both to get FileName (eg: file.jpg)
             $path = public_path() . '/avatar/';
-            //$file->move($path, $fileName);
             // Resize and upload new avatar
             $image_resize = Image::make($file->getRealPath());
             $image_resize->fit(300, 300);
@@ -131,19 +97,6 @@ class UserController extends Controller
         return redirect('/home')->with('status', 'User updated!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        $user = User::find($id);
-        $user->delete();
-
-        return redirect('/user')->with('success', 'User deleted!');
-    }
     public function getUserInfo(Request $request)
     {
         $dataResult = array('status' => 1, 'message' => '');
@@ -164,6 +117,7 @@ class UserController extends Controller
         }
         return $user;
     }
+
     private function checkUserExist($email)
     {
         $user = User::where('email', $email)->where('id', '!=', Auth::user()->id)->first();

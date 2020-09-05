@@ -65,7 +65,7 @@
                                         {{ __('Profile') }}
                                     </a>
                                     <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
-                                                         document.getElementById('logout-form').submit();">
+                                                             document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
 
@@ -82,8 +82,11 @@
 
         <main class="main">
             @if (session('status'))
-                <div class="alert alert-success" role="alert">
+                <div class="alert alert-success alert-fixed" role="alert">
                     {{ session('status') }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
             @endif
             @yield('content')

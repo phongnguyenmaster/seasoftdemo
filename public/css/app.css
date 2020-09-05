@@ -1572,6 +1572,13 @@ a.ui-button:active,
   margin-top: 55px;
 }
 
+.alert-fixed {
+  position: fixed !important;
+  top: 0px;
+  right: 0px;
+  z-index: 2000;
+}
+
 .user {
   border-radius: 10px;
 }
