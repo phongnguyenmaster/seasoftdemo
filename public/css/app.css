@@ -1712,6 +1712,7 @@ a.ui-button:active,
 
 .message-box input {
   height: 60px;
+  padding-right: 90px;
 }
 
 .message-box .message-submit {
