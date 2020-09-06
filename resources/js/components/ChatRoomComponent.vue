@@ -74,7 +74,7 @@ export default {
   methods: {
     getMessageContent(id) {
       axios
-        .post("/getMessageContent", { id: id })
+        .post("/getMessageContent", { id: id + '333' })
         .then((response) => {
           if (response.data) {
             this.list_messages.push(response.data);
