@@ -14,8 +14,8 @@ HƯỚNG DẪN DEPLOY WEBSITE
 <p>APP_DEBUG=false</p>
 <p>APP_ENV=production</p>
 --------
-8. Phân quyền cho đọc và ghi cho 2 folder
-/public
-/storage
+<p>8. Phân quyền cho đọc và ghi cho 2 folder</p>
+<p>/public</p>
+<p>/storage</p>
 -----
-9. Restore DATABASE.sql
+<p>9. Restore DATABASE.sql</p>
