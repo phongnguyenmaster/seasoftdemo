@@ -20,7 +20,9 @@ Route::get('/', 'HomeController@index')->name('home');
 Route::get('/home', 'HomeController@index')->name('home');
 
 // Load info user login
-Route::resource('user', 'UserController');
+Route::get('user/profile', 'UserController@profile')->name('user.profile');
+Route::resource('user', 'UserController', ['only'=> ['update']]);
+
 Route::post('getUserInfo', 'UserController@getUserInfo');
 Route::get('/getUserLogin', function () {
     return Auth::user();

@@ -14,16 +14,7 @@ class UserController extends Controller
     {
         $this->middleware('auth');
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $users = User::all();
-        return view('user.index', compact('users'));
-    }
+
     function getListUser($page)
     {
         $validator = Validator::make(array('page' => $page), [
@@ -36,25 +27,12 @@ class UserController extends Controller
         return $user->getListUser($page);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function profile()
     {
-        $user = User::find($id);
+        $user = Auth::user();
         return view('user.edit', compact('user'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
@@ -74,7 +52,7 @@ class UserController extends Controller
                 ->withErrors($validator)
                 ->withInput();
         }
-        $user = User::find($id);
+        $user = Auth::user();
         $user->name =  $request->get('name');
         $user->email = $request->get('email');
         $user->updated_at = date('Y-m-d H:i:s');
