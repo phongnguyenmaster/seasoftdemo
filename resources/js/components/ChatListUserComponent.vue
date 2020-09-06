@@ -78,7 +78,11 @@ export default {
       this.activeIndex = index;
     },
     showNewMessage(userId) {
-      this.$refs["item-" + userId][0].isNewMessage = true;
+      if (this.$refs["item-" + userId].length > 0) {
+        if (!this.$refs["item-" + userId][0].isActive) {
+          this.$refs["item-" + userId][0].isNewMessage = true;
+        }
+      }
     },
   },
 };

@@ -33,7 +33,7 @@ export default {
     var totalWidth = $(".mainchat").width() - 1;
     $("#col-user-list").resizable({
       minWidth: 86,
-      handles: "e, w",
+      handles: "e",
       resize: function (event, ui) {
         var width = $("#col-user-list").width();
         $("#col-main-chat").css("width", totalWidth - width);

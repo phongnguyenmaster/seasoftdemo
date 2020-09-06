@@ -38,7 +38,7 @@ export default {
       isLoadHistory: false,
       lastIdHistory: 0,
       list_messages: [],
-      userReceiverInfo: { avatar: "chatroom.jpg", name: "ROOM CHAT" },
+      userReceiverInfo: { avatar: "chatroom.jpg", name: "ROOM CHAT", id: 0 },
       socket: io.connect($("#socketUrl").val()),
     };
   },
