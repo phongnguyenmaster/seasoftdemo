@@ -15,10 +15,10 @@
                             <a href="{{ url('auth/social/linkedin') }}" class="btn btn-lg btn-primary mb-2">
                                 <i class="fab fa-linkedin"></i> Linkedin
                             </a>
-                            <a href="{{ url('auth/social/google') }}" class="btn btn-lg btn-danger mb-2 disabled">
+                            <a href="{{ url('auth/social/google') }}" class="btn btn-lg btn-danger mb-2" hidden>
                                 <i class="fab fa-google"></i> Google</strong>
                             </a>
-                            <a href="{{ url('auth/social/facebook') }}" class="btn btn-lg btn-primary mb-2 disabled">
+                            <a href="{{ url('auth/social/facebook') }}" class="btn btn-lg btn-primary mb-2" hidden>
                                 <i class="fab fa-facebook"></i> Facebook
                             </a>
                         </div>
@@ -76,10 +76,14 @@
                                     <button type="submit" class="btn btn-primary">
                                         {{ __('Login') }}
                                     </button>
-
                                     @if (Route::has('password.request'))
                                         <a class="btn btn-link" href="{{ route('password.request') }}">
                                             {{ __('Forgot Your Password?') }}
+                                        </a>
+                                    @endif
+                                    @if (Route::has('password.request'))
+                                        <a class="btn btn-link" href="{{ route('register') }}">
+                                            {{ __('Register new account?') }}
                                         </a>
                                     @endif
                                 </div>
