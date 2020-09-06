@@ -9,17 +9,17 @@
 
                     <div class="card-body">
                         <div class="text-center">
-                            <a href="{{ url('auth/social/google') }}" class="btn btn-lg btn-danger mb-2">
-                                <i class="fab fa-google"></i> Google</strong>
-                            </a>
-                            <a href="{{ url('auth/social/facebook') }}" class="btn btn-lg btn-primary mb-2">
-                                <i class="fab fa-facebook"></i> Facebook
-                            </a>
                             <a href="{{ url('auth/social/github') }}" class="btn btn-lg btn-dark mb-2">
                                 <i class="fab fa-github"></i> Github
                             </a>
                             <a href="{{ url('auth/social/linkedin') }}" class="btn btn-lg btn-primary mb-2">
                                 <i class="fab fa-linkedin"></i> Linkedin
+                            </a>
+                            <a href="{{ url('auth/social/google') }}" class="btn btn-lg btn-danger mb-2 disabled">
+                                <i class="fab fa-google"></i> Google</strong>
+                            </a>
+                            <a href="{{ url('auth/social/facebook') }}" class="btn btn-lg btn-primary mb-2 disabled">
+                                <i class="fab fa-facebook"></i> Facebook
                             </a>
                         </div>
                         <hr>
