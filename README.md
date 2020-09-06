@@ -1,4 +1,5 @@
-CHẠY NHỮNG SAU ĐỂ CÀI DEPLOY WEB
+HƯỚNG DẪN DEPLOY WEBSITE
+
 1. npm install
 2. composer install
 3. php artisan config:clear
@@ -8,10 +9,10 @@ CHẠY NHỮNG SAU ĐỂ CÀI DEPLOY WEB
 6. nodejs socket.js 
 -----
 7. Vào file .env -> config và connect database
-APP_URL=http://localhost:82
-SOCKET_URL=http://localhost:3000
-APP_DEBUG=false
-APP_ENV=production
+<p>APP_URL=http://localhost:82</p>
+<p>SOCKET_URL=http://localhost:3000</p>
+<p>APP_DEBUG=false</p>
+<p>APP_ENV=production</p>
 --------
 8. Phân quyền cho đọc và ghi cho 2 folder
 /public
