@@ -40,7 +40,7 @@ class UserController extends Controller
             'email' => 'required|max:100|email',
         ]);
         if ($validator->fails()) {
-            return redirect('user/' . Auth::user()->id . '/edit')
+            return redirect('/user/profile')
                 ->withErrors($validator)
                 ->withInput();
         }
@@ -48,7 +48,7 @@ class UserController extends Controller
         $existUser = $this->checkUserExist($request->get('email'));
         if ($existUser) {
             $validator->errors()->add('email', __('validation.is_exist', ['attribute' => __('field.email')]));
-            return redirect('user/' . Auth::user()->id . '/edit')
+            return redirect('/user/profile')
                 ->withErrors($validator)
                 ->withInput();
         }
