@@ -16,12 +16,6 @@
         opacity: 1;
     }
 }
-/*--------------------
-Body
---------------------*/
-/*--------------------
-Chat
---------------------*/
 
 .chat {
     height: calc(100vh - 55px);
@@ -31,9 +25,7 @@ Chat
     display: flex;
     flex-direction: column;
 }
-/*--------------------
-Chat Title
---------------------*/
+
 .chat-title {
     flex: 0 1 45px;
     position: relative;
@@ -66,9 +58,7 @@ Chat Title
         }
     }
 }
-/*--------------------
-Message Box
---------------------*/
+
 .message-box {
     flex: 0 1 40px;
     width: 100%;

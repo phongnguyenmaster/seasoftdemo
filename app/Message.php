@@ -23,7 +23,7 @@ class Message extends Model
         }
         return $model->take($take)->get();
     }
-        public function loadMessagePrivate($lastIdHistory, $privateKey)
+    public function loadMessagePrivate($lastIdHistory, $privateKey)
     {
         $take = 20;
         $model = Message::with('user')->orderBy('id', 'desc');
@@ -36,7 +36,6 @@ class Message extends Model
     public function createChatPrivateKey($receiver_id)
     {
         $user_id = Auth::user()->id;
-        // Create simple key for private chat. Tạo simple hoy chứ run thật thì tạo key phực tạp hơn.
         $private_key = '';
         if ($user_id > $receiver_id) {
             $private_key = $receiver_id . $user_id;

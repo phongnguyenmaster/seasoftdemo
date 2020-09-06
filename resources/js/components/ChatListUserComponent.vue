@@ -6,23 +6,14 @@
       </div>
       <div class="userlist scroll-height">
         <div class="userlist-content">
-          <div @click="roomChat" class="user" :class="{ active: activeIndex === 0 }">
-            <div class="user-item">
-              <div class="user-avatar">
-                <img src="/public/icon/chatroom.jpg" />
-              </div>
-              <div class="user-name hiddenwidth">
-                ROOM CHAT
-                <div class="time">All people</div>
-              </div>
-            </div>
-          </div>
           <ChatUserItem
             v-for="(user, index) in list_user"
             :key="index"
             :user="user"
             :isActive="activeIndex === index + 1"
-            @onToggle="onToggle(index+1)"
+            :isNewMessage="false"
+            :ref="'item-' + user.id"
+            @onToggle="onToggle(index+1, user.id)"
           ></ChatUserItem>
         </div>
       </div>
@@ -39,12 +30,16 @@ export default {
   },
   data() {
     return {
-      message: "",
       page: 1,
-      currentHeight: 0,
-      lastIdHistory: 0,
-      list_user: [],
-      activeIndex: 0,
+      lastIdUser: 0,
+      list_user: [
+        {
+          id: 0,
+          avatar: "chatroom.jpg",
+          name: "ROOM CHAT",
+        },
+      ],
+      activeIndex: 1,
     };
   },
   mounted() {
@@ -53,37 +48,37 @@ export default {
       function (e) {
         var pos = $(e.target).scrollTop() + $(e.target).height();
         if (pos >= container.scrollHeight) {
-          this.loadMessage(this.page);
+          this.loadUsers(this.page);
         }
       }.bind(this)
     );
   },
   created() {
-    this.loadMessage(this.page);
-  },
-  updated: function () {
+    this.loadUsers(this.page);
   },
   methods: {
-    loadMessage(page) {
+    loadUsers(page) {
       axios
         .get("/loadlistuser/" + this.page)
         .then((response) => {
           if (response.data.length > 0) {
             response.data.forEach((i) => this.list_user.push(i));
             this.page++;
-            this.lastIdHistory = response.data[response.data.length - 1]["id"];
+            this.lastIdUser = response.data[response.data.length - 1]["id"];
           }
         })
         .catch((error) => {
           console.log(error);
         });
     },
-    onToggle(index) {
+    onToggle(index, userId) {
+      if (this.$refs["item-" + userId].length > 0) {
+        this.$refs["item-" + userId][0].isNewMessage = false;
+      }
       this.activeIndex = index;
     },
-    roomChat() {
-      this.onToggle(0);
-      this.$parent.switchToRoom();
+    showNewMessage(userId) {
+      this.$refs["item-" + userId][0].isNewMessage = true;
     },
   },
 };

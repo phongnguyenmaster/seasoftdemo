@@ -1,7 +1,7 @@
 <template>
   <div class="row mainchat">
     <div id="col-user-list">
-      <ChatListUser></ChatListUser>
+      <ChatListUser :ref="'listUser'"></ChatListUser>
     </div>
     <div id="col-main-chat">
       <component :is="current" v-bind="currentProperties"></component>
@@ -42,6 +42,7 @@ export default {
     // Reset resize for list user
     $(window).resize(function (e) {
       if (e.target == window) {
+        // Get width of current screen
         totalWidth = $(window).width() - 1;
         $("#col-user-list").css("width", "");
         $("#col-main-chat").css("width", "");
@@ -56,6 +57,9 @@ export default {
     },
   },
   methods: {
+    showNewMessage(userId) {
+        this.$refs['listUser'].showNewMessage(userId);
+    },
     switchToRoom() {
       this.current = "ChatRoom";
     },

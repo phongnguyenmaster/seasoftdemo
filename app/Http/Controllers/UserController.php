@@ -77,6 +77,7 @@ class UserController extends Controller
         $user = User::find($id);
         $user->name =  $request->get('name');
         $user->email = $request->get('email');
+        $user->updated_at = date('Y-m-d H:i:s');
         //$user->password = $request->get('password');
         if ($request->hasfile('file')) {
             $file = $request->file('file');

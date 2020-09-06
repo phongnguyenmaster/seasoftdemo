@@ -36,7 +36,9 @@ Vue.config.productionTip = false
 const app = new Vue({
     el: '#app',
     data: {
-        currentUserLogin: {}
+        currentUserLogin: {},
+        APP_URL: $('#appUrl').val(),
+        SOCKET_URL: $('#socketUrl').val()
     },
     methods: {
         getCurrentUserLogin() {

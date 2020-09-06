@@ -43,7 +43,6 @@ export default {
     };
   },
   mounted() {
-    console.log("1");
     var container = this.$el.querySelector(".messages");
     $(container).scroll(
       function (e) {
@@ -58,15 +57,13 @@ export default {
   created() {
     this.loadMessage(this.page);
     this.socket.on("MessagePosted", (msg) => {
-      //let message = msg
-      //message.user = data.user
+      this.$parent.showNewMessage(0);
       this.list_messages.push(msg);
     });
   },
   updated: function () {
     var container = this.$el.querySelector(".messages");
     if (!this.isLoadHistory) {
-      console.log(container.scrollHeight);
       container.scrollTop = container.scrollHeight;
     } else {
       container.scrollTop =

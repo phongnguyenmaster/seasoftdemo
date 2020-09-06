@@ -1,5 +1,9 @@
 <template>
-  <div @click="startChat(user.id)" class="user" :class="{ active: isActive }">
+  <div
+    @click="startChat(user.id)"
+    class="user"
+    :class="{ active: isActive, newmessage: isNewMessage }"
+  >
     <div class="user-item">
       <div class="user-avatar">
         <img v-bind:src="'/public/avatar/' + (user.avatar !== null ? user.avatar : 'default.jpg')" />
@@ -21,29 +25,20 @@ export default {
     },
     isActive: false,
   },
+  data() {
+    return {
+      isNewMessage: false,
+    };
+  },
   methods: {
     startChat(receiver_id) {
-      if (receiver_id) {
-        this.$emit("onToggle");
+      this.$emit("onToggle");
+      if (receiver_id == 0) {
+        this.$parent.$parent.switchToRoom();
+      } else {
         this.$parent.$parent.switchToPrivate(receiver_id);
       }
     },
   },
 };
 </script>
-
-<style lang="scss" scoped>
-.message {
-  display: flex;
-  color: #00b8ff;
-  .message-item:not(:last-child) {
-    margin-right: 5px;
-  }
-}
-.message:not(:last-child) {
-  padding-bottom: 20px;
-}
-.is-current-user {
-  color: #a900ff;
-}
-</style>
