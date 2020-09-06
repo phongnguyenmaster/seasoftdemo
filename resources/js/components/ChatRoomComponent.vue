@@ -56,7 +56,7 @@ export default {
   },
   created() {
     this.loadMessage(this.page);
-    this.socket.on("MessagePosted", (msg) => {
+    this.socket.on("newmessage", (msg) => {
       this.$parent.showNewMessage(0);
       this.list_messages.push(msg);
     });

@@ -64,7 +64,7 @@ export default {
   },
   created() {
     this.changeReceiver();
-    this.socket.on("MessagePosted", (msg) => {
+    this.socket.on("newmessage", (msg) => {
       this.list_messages.push(msg);
     });
   },

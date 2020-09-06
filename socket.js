@@ -8,7 +8,7 @@ io.on('connection', (socket) => {
         console.log('Disconnect room');
     });
     socket.on('newmessage', (msg) => {
-        socket.broadcast.emit('MessagePosted', msg);
+        socket.broadcast.emit('newmessage', msg);
     });
 });
 
@@ -23,8 +23,8 @@ privateChat.on('connection', socket => {
         socket.leave(privateKey);
     });
     socket.on('private_chat', function (data) {
-        console.log('MessagePosted' + data.privateKey);
-        socket.to(data.privateKey).emit('MessagePosted', data);
+        console.log('newmessage' + data.privateKey);
+        socket.to(data.privateKey).emit('newmessage', data);
     });
 });
 http.listen(3000, function () {
