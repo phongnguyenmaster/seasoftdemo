@@ -56,9 +56,9 @@ export default {
   },
   created() {
     this.loadMessage(this.page);
-    this.socket.on("newmessage", (msg) => {
+    this.socket.on("newmessage", (id) => {
       this.$parent.showNewMessage(0);
-      this.list_messages.push(msg);
+      this.getMessageContent(id);
     });
   },
   updated: function () {
@@ -72,6 +72,18 @@ export default {
     }
   },
   methods: {
+    getMessageContent(id) {
+      axios
+        .post("/getMessageContent", { id: id })
+        .then((response) => {
+          if (response.data) {
+            this.list_messages.push(response.data);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
     loadMessage(page) {
       this.isLoadHistory = true;
       axios
@@ -106,7 +118,7 @@ export default {
           message: newMessage.message,
         })
         .then((response) => {
-          this.socket.emit("newmessage", response.data.message);
+          this.socket.emit("newmessage", response.data.message.id);
         })
         .catch((error) => {
           console.log(error);

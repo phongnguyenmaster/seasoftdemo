@@ -32,6 +32,7 @@ Route::get('loadlistuser/{page}', 'UserController@getListUser');
 
 // Public room
 Route::get('loadmessageroom/{lastIdHistory}', 'MessageController@getMessageChatRoom');
+Route::post('getMessageContent', 'MessageController@getMessageContent');
 
 // Private Room
 Route::get('getPrivateKey/{receiver_id}', 'MessageController@getPrivateKey');

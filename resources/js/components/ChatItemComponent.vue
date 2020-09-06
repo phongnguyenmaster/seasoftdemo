@@ -1,7 +1,6 @@
 <template>
   <div
     class="message"
-    :id="$root.currentUserLogin.id"
     :class="($root.currentUserLogin.id !== message.user.id ? 'reply-chat': 'my-chat')"
   >
     <div

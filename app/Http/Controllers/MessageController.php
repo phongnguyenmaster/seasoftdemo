@@ -33,6 +33,23 @@ class MessageController extends Controller
         $message->save();
         return ['message' => $message->load('user')];
     }
+    function getMessageContent(Request $request)
+    {
+        $dataResult = array('status' => 1, 'message' => '');
+        $validator = Validator::make($request->all(), [
+            'id' => 'required|numeric',
+        ]);
+        if ($validator->fails()) {
+            return abort(404);
+        }
+        $id = $request->get('id');
+        $message = Message::with('user')->where('id', $id)->where('private_key', 0)->first();
+        if ($message) {
+            return $message;
+        } else {
+            return abort(404);
+        }
+    }
     function getMessageChatRoom($lastIdHistory)
     {
         $validator = Validator::make(array('lastIdHistory' => $lastIdHistory), [
